@@ -29,9 +29,14 @@
       title="当前约 {result.currentAge.toFixed(1)} 岁"
     />
   </div>
-  <div class="flex flex-wrap gap-x-4 gap-y-1 text-[0.65rem] uppercase tracking-[0.25em] text-slate-500">
+  <div class="relative w-full min-h-[1.25rem] text-[0.65rem] uppercase tracking-[0.25em] text-slate-500">
     {#each data.thresholds as t}
-      <span class="{t.passed ? 'text-amber-400/80' : ''}">{t.age} 岁</span>
+      <span
+        class="absolute -translate-x-1/2 whitespace-nowrap {t.passed ? 'text-amber-400/80' : ''}"
+        style="left: {(t.age / maxThreshold) * 100}%"
+      >
+        {t.age}
+      </span>
     {/each}
   </div>
   <p class="text-[0.65rem] uppercase tracking-[0.3em] text-slate-500">
