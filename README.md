@@ -53,7 +53,7 @@ npm run build
 src/
 ├── lib/               # Core logic and types
 │   ├── types.ts       # Shared TypeScript interfaces
-│   └── lifePercent.ts # Pure calculation utilities
+│   └── lifeSpent.ts   # Pure calculation utilities
 ├── components/        # Svelte UI components
 │   ├── InputPanel.svelte
 │   └── ResultSummary.svelte

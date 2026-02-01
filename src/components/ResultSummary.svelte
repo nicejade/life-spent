@@ -1,13 +1,21 @@
 <script lang="ts">
   import type { LifeCalculation } from '../lib/types';
-  import { formatAge, formatDate } from '../lib/lifePercent';
+  import { formatAge, formatDate, getImpactData } from '../lib/lifeSpent';
+  import ImpactWeeksWall from './impact/ImpactWeeksWall.svelte';
+  import ImpactTimeStrata from './impact/ImpactTimeStrata.svelte';
+  import ImpactHeartbeatStrip from './impact/ImpactHeartbeatStrip.svelte';
+  import ImpactGridAges from './impact/ImpactGridAges.svelte';
 
   export let result: LifeCalculation;
   export let onReset: () => void;
 
+  type ImpactView = 'strata' | 'weeks' | 'heartbeat' | 'grid';
+  let impactView: ImpactView = 'grid';
+
   $: percentDisplay = result.percentSpent.toFixed(2);
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
+  $: impactData = getImpactData(result);
 </script>
 
 <div class="glass-card rounded-2xl p-8 md:p-12 max-w-2xl w-full space-y-8">
@@ -32,6 +40,74 @@
     </div>
   </div>
 
+  <div class="space-y-4">
+    <div class="flex flex-wrap gap-2" role="tablist" aria-label="冲击力展示方式">
+      <button
+        type="button"
+        role="tab"
+        aria-selected={impactView === 'grid'}
+        aria-controls="impact-panel"
+        id="tab-grid"
+        class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'grid'
+          ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}"
+        on:click={() => (impactView = 'grid')}
+      >
+        年龄格
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={impactView === 'strata'}
+        aria-controls="impact-panel"
+        id="tab-strata"
+        class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'strata'
+          ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}"
+        on:click={() => (impactView = 'strata')}
+      >
+        时间层
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={impactView === 'weeks'}
+        aria-controls="impact-panel"
+        id="tab-weeks"
+        class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'weeks'
+          ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}"
+        on:click={() => (impactView = 'weeks')}
+      >
+        周历墙
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={impactView === 'heartbeat'}
+        aria-controls="impact-panel"
+        id="tab-heartbeat"
+        class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'heartbeat'
+          ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}"
+        on:click={() => (impactView = 'heartbeat')}
+      >
+        节拍刻度
+      </button>
+    </div>
+    <div id="impact-panel" role="tabpanel" aria-labelledby="tab-{impactView}" class="glass-card rounded-xl p-5 border border-slate-700/50">
+      {#if impactView === 'strata'}
+        <ImpactTimeStrata data={impactData} />
+      {:else if impactView === 'weeks'}
+        <ImpactWeeksWall data={impactData} />
+      {:else if impactView === 'heartbeat'}
+        <ImpactHeartbeatStrip {result} data={impactData} />
+      {:else}
+        <ImpactGridAges data={impactData} />
+      {/if}
+    </div>
+  </div>
+
   <dl class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm md:text-base text-slate-300">
     <div class="flex flex-col">
       <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">出生日期</dt>
@@ -51,8 +127,9 @@
     </div>
   </dl>
 
-  <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm text-slate-300 leading-relaxed">
-    中位寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。
+  <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm text-slate-300 leading-relaxed space-y-2">
+    <p>中位寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。</p>
+    <p class="text-amber-300/90 font-medium">若你已过三十有五，那道「还年轻」的门槛早已在身后。</p>
   </div>
 
   <button

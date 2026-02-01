@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Gender } from '../lib/types';
-  import { validateBirthDate } from '../lib/lifePercent';
+  import { validateBirthDate } from '../lib/lifeSpent';
 
   export let onCalculate: (birthDate: Date, gender: Gender) => void;
 
