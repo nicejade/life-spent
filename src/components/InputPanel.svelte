@@ -1,9 +1,37 @@
 <script lang="ts">
   import { DEFAULT_MEDIAN_AGE, validateBirthDate } from '../lib/lifeSpent';
   import CustomSelect from './Select.svelte';
+  import { STORAGE_KEY, MIN_YEAR, DEFAULT_BIRTH_YEAR, DEFAULT_BIRTH_MONTH, DEFAULT_BIRTH_DAY } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
 
-  let medianAgeInput = String(DEFAULT_MEDIAN_AGE.male);
+  interface StoredSettings {
+    selectedYear: string;
+    selectedMonth: string;
+    selectedDay: string;
+    gender: Gender;
+    medianAgeInput: string;
+  }
+
+  function loadSettings(): StoredSettings | null {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch {
+      // ignore parse errors
+    }
+    return null;
+  }
+
+  function saveSettings(settings: StoredSettings): void {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // ignore storage errors
+    }
+  }
+
 
   function handleMedianAgeInput(e: Event) {
     const input = e.target as HTMLInputElement;
@@ -15,7 +43,6 @@
       value = parts[0] + '.' + parts.slice(1).join('');
     }
     
-    // 限制最多2位小数
     if (parts[1] && parts[1].length > 2) {
       value = parts[0] + '.' + parts[1].slice(0, 2);
     }
@@ -42,9 +69,9 @@
   }
 
   const yearOptions: SelectItem[] = Array.from(
-    { length: currentYear - 1929 + 1 },
+    { length: currentYear - MIN_YEAR + 1 },
     (_, i) => {
-      const y = 1929 + i;
+      const y = currentYear - i;
       return { name: String(y), value: String(y) };
     }
   );
@@ -56,10 +83,35 @@
 
   const MEDIAN_AGE_DEFAULT_MALE = DEFAULT_MEDIAN_AGE.male;
   const MEDIAN_AGE_DEFAULT_FEMALE = DEFAULT_MEDIAN_AGE.female;
+  const MEDIAN_AGE_PATTERN = '[0-9]*\\.?[0-9]{0,2}';
 
-  let selectedYear = '1996';
-  let selectedMonth = '1';
-  let selectedDay = '1';
+  function getInitialSettings(): StoredSettings {
+    const saved = loadSettings();
+    if (saved) {
+      const g = saved.gender || 'male';
+      return {
+        selectedYear: saved.selectedYear || DEFAULT_BIRTH_YEAR,
+        selectedMonth: saved.selectedMonth || DEFAULT_BIRTH_MONTH,
+        selectedDay: saved.selectedDay || DEFAULT_BIRTH_DAY,
+        gender: g,
+        medianAgeInput: saved.medianAgeInput ?? String(DEFAULT_MEDIAN_AGE[g]),
+      };
+    }
+    return {
+      selectedYear: DEFAULT_BIRTH_YEAR,
+      selectedMonth: DEFAULT_BIRTH_MONTH,
+      selectedDay: DEFAULT_BIRTH_DAY,
+      gender: 'male',
+      medianAgeInput: String(DEFAULT_MEDIAN_AGE.male),
+    };
+  }
+
+  const initial = getInitialSettings();
+  let selectedYear = initial.selectedYear;
+  let selectedMonth = initial.selectedMonth;
+  let selectedDay = initial.selectedDay;
+  let gender: Gender = initial.gender;
+  let medianAgeInput = initial.medianAgeInput;
 
   $: dayOptions = (() => {
     const y = parseInt(selectedYear, 10) || currentYear;
@@ -79,7 +131,6 @@
   $: monthActive = Math.max(0, monthOptions.findIndex((o) => o.value === selectedMonth));
   $: dayActive = Math.max(0, dayOptions.findIndex((o) => o.value === selectedDay));
 
-  let gender: Gender = 'male';
   let error = '';
 
   // 根据性别设置默认中位数年龄输入值
@@ -87,6 +138,26 @@
     medianAgeInput = String(MEDIAN_AGE_DEFAULT_MALE);
   } else if (gender === 'female' && medianAgeInput === String(MEDIAN_AGE_DEFAULT_MALE)) {
     medianAgeInput = String(MEDIAN_AGE_DEFAULT_FEMALE);
+  }
+
+  $: saveSettings({
+    selectedYear,
+    selectedMonth,
+    selectedDay,
+    gender,
+    medianAgeInput
+  });
+
+  function handleYearSelect(e: CustomEvent<SelectItem>) {
+    selectedYear = e.detail?.value ?? selectedYear;
+  }
+
+  function handleMonthSelect(e: CustomEvent<SelectItem>) {
+    selectedMonth = e.detail?.value ?? selectedMonth;
+  }
+
+  function handleDaySelect(e: CustomEvent<SelectItem>) {
+    selectedDay = e.detail?.value ?? selectedDay;
   }
 
   function handleSubmit() {
@@ -139,21 +210,21 @@
           active={yearActive}
           label="年"
           listboxClass="w-full min-w-0"
-          on:selected={(e) => (selectedYear = e.detail?.value ?? selectedYear)}
+          on:selected={handleYearSelect}
         />
         <CustomSelect
           options={monthOptions}
           active={monthActive}
           label="月"
           listboxClass="w-full min-w-0"
-          on:selected={(e) => (selectedMonth = e.detail?.value ?? selectedMonth)}
+          on:selected={handleMonthSelect}
         />
         <CustomSelect
           options={dayOptions}
           active={dayActive}
           label="日"
           listboxClass="w-full min-w-0"
-          on:selected={(e) => (selectedDay = e.detail?.value ?? selectedDay)}
+          on:selected={handleDaySelect}
         />
       </div>
     </div>
@@ -204,7 +275,7 @@
         <input
           type="number"
           inputmode="decimal"
-          pattern="[0-9]*\.?[0-9]{0,2}"
+          pattern={MEDIAN_AGE_PATTERN}
           value={medianAgeInput}
           on:input={handleMedianAgeInput}
           class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl

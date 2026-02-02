@@ -21,9 +21,13 @@
   let selectedItem: SelectItem = options[active]
   let selectedItemCopy: SelectItem = deepClone(selectedItem)
 
-  /* Sync selected item when options or active index change (e.g. parent sets new value) */
-  $: if (options && active >= 0 && active < options.length) {
-    selectedItem = options[active]
+  /* Make the selected item change according to the system language switch */
+  const updateSelectedItem = () => {
+    selectedItem = options.find((item) => item.value === selectedItem?.value)
+  }
+
+  $: if (options) {
+    updateSelectedItem()
   }
 
   $: if (selectedItem?.name !== selectedItemCopy?.name) {
