@@ -1,5 +1,11 @@
 export type Gender = 'male' | 'female';
 
+export interface SelectItem {
+  name: string
+  value?: string
+  disabled?: boolean
+}
+
 export interface BirthInfo {
   birthDate: Date;
   gender: Gender;

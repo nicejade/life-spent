@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { LifeCalculation } from '../../lib/types';
+  import type { LifeCalculation } from '../../types/main';
   import type { ImpactData } from '../../lib/lifeSpent';
 
   export let result: LifeCalculation;

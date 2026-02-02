@@ -1,12 +1,57 @@
 <script lang="ts">
-  import type { Gender } from '../lib/types';
   import { validateBirthDate } from '../lib/lifeSpent';
+  import CustomSelect from './Select.svelte';
+  import type { Gender, SelectItem } from '../types/main';
 
   export let onCalculate: (birthDate: Date, gender: Gender) => void;
 
   const quickAges = [25, 32, 40, 50];
 
-  let birthDateStr = '';
+  const currentYear = new Date().getFullYear();
+
+  function pad(n: number): string {
+    return String(n).padStart(2, '0');
+  }
+
+  function daysInMonth(year: number, month: number): number {
+    return new Date(year, month, 0).getDate();
+  }
+
+  const yearOptions: SelectItem[] = Array.from(
+    { length: currentYear - 1929 + 1 },
+    (_, i) => {
+      const y = 1929 + i;
+      return { name: String(y), value: String(y) };
+    }
+  );
+
+  const monthOptions: SelectItem[] = Array.from({ length: 12 }, (_, i) => {
+    const m = i + 1;
+    return { name: `${pad(m)} 月`, value: String(m) };
+  });
+
+  let selectedYear = '1996';
+  let selectedMonth = '1';
+  let selectedDay = '1';
+
+  $: dayOptions = (() => {
+    const y = parseInt(selectedYear, 10) || currentYear;
+    const m = parseInt(selectedMonth, 10) || 1;
+    const maxDay = daysInMonth(y, m);
+    const day = parseInt(selectedDay, 10) || 1;
+    if (day > maxDay) selectedDay = String(maxDay);
+    return Array.from({ length: maxDay }, (_, i) => {
+      const d = i + 1;
+      return { name: pad(d), value: String(d) };
+    });
+  })() as SelectItem[];
+
+  $: birthDateStr = `${selectedYear}-${pad(parseInt(selectedMonth, 10) || 1)}-${pad(parseInt(selectedDay, 10) || 1)}`;
+
+  $: yearActive = Math.max(0, yearOptions.findIndex((o) => o.value === selectedYear));
+  $: monthActive = Math.max(0, monthOptions.findIndex((o) => o.value === selectedMonth));
+  $: dayActive = Math.max(0, dayOptions.findIndex((o) => o.value === selectedDay));
+
   let gender: Gender = 'male';
   let error = '';
 
@@ -36,7 +81,9 @@
   function applyQuickAge(age: number) {
     const today = new Date();
     const candidate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
-    birthDateStr = candidate.toISOString().slice(0, 10);
+    selectedYear = String(candidate.getFullYear());
+    selectedMonth = String(candidate.getMonth() + 1);
+    selectedDay = String(candidate.getDate());
     error = '';
   }
 </script>
@@ -53,23 +100,40 @@
   </div>
 
   <form on:submit|preventDefault={handleSubmit} class="space-y-6">
-    <div class="space-y-2">
-      <label for="birthdate" class="block text-sm font-medium text-slate-300">
+    <div class="space-y-2" role="group" aria-labelledby="birthdate-label">
+      <p id="birthdate-label" class="block text-sm font-medium text-slate-300">
         出生日期
-      </label>
-      <input
-        id="birthdate"
-        type="date"
-        bind:value={birthDateStr}
-        class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl
-               text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400/60
-               focus:border-amber-400 transition-all cursor-pointer"
+      </p>
+      <div
+        class="grid grid-cols-3 gap-3"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby="birthdate-help"
-      />
+      >
+        <CustomSelect
+          options={yearOptions}
+          active={yearActive}
+          label="年"
+          listboxClass="w-full min-w-0"
+          on:selected={(e) => (selectedYear = e.detail?.value ?? selectedYear)}
+        />
+        <CustomSelect
+          options={monthOptions}
+          active={monthActive}
+          label="月"
+          listboxClass="w-full min-w-0"
+          on:selected={(e) => (selectedMonth = e.detail?.value ?? selectedMonth)}
+        />
+        <CustomSelect
+          options={dayOptions}
+          active={dayActive}
+          label="日"
+          listboxClass="w-full min-w-0"
+          on:selected={(e) => (selectedDay = e.detail?.value ?? selectedDay)}
+        />
+      </div>
       <p id="birthdate-help" class="text-xs text-slate-500">
-        也可以直接粘贴 <kbd class="px-2 py-1 bg-slate-900 rounded">YYYY-MM-DD</kbd> 格式.
+        年份自 1929 至当前年；可选快速年龄一键填充。
       </p>
     </div>
 

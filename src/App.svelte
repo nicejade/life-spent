@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { Gender } from './lib/types';
-  import type { LifeCalculation } from './lib/types';
   import { calculateLifePercent } from './lib/lifeSpent';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
+  import type { Gender, LifeCalculation } from './types/main';
 
   let result: LifeCalculation | null = null;
 

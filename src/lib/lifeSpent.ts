@@ -1,4 +1,4 @@
-import type { BirthInfo, LifeCalculation } from './types';
+import type { BirthInfo, LifeCalculation } from '../types/main'
 
 const DEFAULT_MEDIAN_AGE = {
   male: 73,

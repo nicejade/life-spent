@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { LifeCalculation } from '../lib/types';
   import { formatAge, formatDate, getImpactData } from '../lib/lifeSpent';
   import ImpactWeeksWall from './impact/ImpactWeeksWall.svelte';
   import ImpactTimeStrata from './impact/ImpactTimeStrata.svelte';
   import ImpactHeartbeatStrip from './impact/ImpactHeartbeatStrip.svelte';
   import ImpactGridAges from './impact/ImpactGridAges.svelte';
+  import type { LifeCalculation } from '../types/main';
 
   export let result: LifeCalculation;
   export let onReset: () => void;
