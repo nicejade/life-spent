@@ -1,6 +1,6 @@
 import type { BirthInfo, LifeCalculation } from '../types/main'
 
-const DEFAULT_MEDIAN_AGE = {
+export const DEFAULT_MEDIAN_AGE = {
   male: 73,
   female: 79
 } as const;

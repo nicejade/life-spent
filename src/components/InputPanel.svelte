@@ -1,11 +1,35 @@
 <script lang="ts">
-  import { validateBirthDate } from '../lib/lifeSpent';
+  import { DEFAULT_MEDIAN_AGE, validateBirthDate } from '../lib/lifeSpent';
   import CustomSelect from './Select.svelte';
   import type { Gender, SelectItem } from '../types/main';
 
-  export let onCalculate: (birthDate: Date, gender: Gender) => void;
+  let medianAgeInput = String(DEFAULT_MEDIAN_AGE.male);
 
-  const quickAges = [25, 32, 40, 50];
+  function handleMedianAgeInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9.]/g, '');
+    
+    // 限制只能有一个小数点
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // 限制最多2位小数
+    if (parts[1] && parts[1].length > 2) {
+      value = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+    
+    // 不能为负数（已经通过正则过滤了负号）
+    medianAgeInput = value;
+  }
+
+  function getMedianAge(): number {
+    const parsed = parseFloat(medianAgeInput);
+    return isNaN(parsed) || parsed < 0 ? DEFAULT_MEDIAN_AGE[gender] : parsed;
+  }
+
+  export let onCalculate: (birthDate: Date, gender: Gender, medianAge: number) => void;
 
   const currentYear = new Date().getFullYear();
 
@@ -29,6 +53,9 @@
     const m = i + 1;
     return { name: `${pad(m)} 月`, value: String(m) };
   });
+
+  const MEDIAN_AGE_DEFAULT_MALE = DEFAULT_MEDIAN_AGE.male;
+  const MEDIAN_AGE_DEFAULT_FEMALE = DEFAULT_MEDIAN_AGE.female;
 
   let selectedYear = '1996';
   let selectedMonth = '1';
@@ -55,6 +82,13 @@
   let gender: Gender = 'male';
   let error = '';
 
+  // 根据性别设置默认中位数年龄输入值
+  $: if (gender === 'male' && medianAgeInput === String(MEDIAN_AGE_DEFAULT_FEMALE)) {
+    medianAgeInput = String(MEDIAN_AGE_DEFAULT_MALE);
+  } else if (gender === 'female' && medianAgeInput === String(MEDIAN_AGE_DEFAULT_MALE)) {
+    medianAgeInput = String(MEDIAN_AGE_DEFAULT_FEMALE);
+  }
+
   function handleSubmit() {
     error = '';
 
@@ -75,22 +109,13 @@
       return;
     }
 
-    onCalculate(birthDate, gender);
-  }
-
-  function applyQuickAge(age: number) {
-    const today = new Date();
-    const candidate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
-    selectedYear = String(candidate.getFullYear());
-    selectedMonth = String(candidate.getMonth() + 1);
-    selectedDay = String(candidate.getDate());
-    error = '';
+    const medianAge = getMedianAge();
+    onCalculate(birthDate, gender, medianAge);
   }
 </script>
 
 <div class="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full space-y-6">
   <div class="space-y-2">
-    <p class="text-sm uppercase tracking-[0.4em] text-amber-400/80">镜面</p>
     <h1 class="text-3xl md:text-4xl font-light text-slate-100">
       人生已度过
     </h1>
@@ -108,7 +133,6 @@
         class="grid grid-cols-3 gap-3"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        aria-describedby="birthdate-help"
       >
         <CustomSelect
           options={yearOptions}
@@ -132,9 +156,6 @@
           on:selected={(e) => (selectedDay = e.detail?.value ?? selectedDay)}
         />
       </div>
-      <p id="birthdate-help" class="text-xs text-slate-500">
-        年份自 1929 至当前年；可选快速年龄一键填充。
-      </p>
     </div>
 
     <fieldset class="space-y-3 border-0 p-0">
@@ -176,21 +197,26 @@
     </fieldset>
 
     <div class="space-y-2">
-      <p class="text-xs uppercase tracking-[0.4em] text-slate-500">快速选择</p>
-      <div class="grid grid-cols-2 gap-3 text-[0.65rem] tracking-[0.3em] uppercase">
-        {#each quickAges as age}
-          <button
-            type="button"
-            on:click={() => applyQuickAge(age)}
-            class="px-3 py-2 bg-slate-800/70 border border-slate-700 rounded-xl
-                   text-slate-200 transition-colors duration-200 hover:border-amber-400
-                   hover:text-amber-300 focus-visible:outline focus-visible:outline-2
-                   focus-visible:outline-offset-2 focus-visible:outline-amber-400 cursor-pointer"
-          >
-            {age} 岁
-          </button>
-        {/each}
+      <p class="text-sm font-medium text-slate-300">
+        中位寿命
+      </p>
+      <div class="flex items-center gap-2">
+        <input
+          type="number"
+          inputmode="decimal"
+          pattern="[0-9]*\.?[0-9]{0,2}"
+          value={medianAgeInput}
+          on:input={handleMedianAgeInput}
+          class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
+                 text-slate-200 text-center transition-all
+                 focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
+          aria-label="中位寿命（可输入小数）"
+        />
+        <span class="text-slate-400">岁</span>
       </div>
+      <p class="text-xs text-slate-500">
+        不同国家和地区的预期寿命存在差异，可根据实际情况调整
+      </p>
     </div>
 
     {#if error}
@@ -215,6 +241,6 @@
   </form>
 
   <p class="text-xs text-slate-500 mt-1 text-center">
-    数据基于中位寿命：男性 73 岁，女性 79 岁
+    默认参考值：男性 73 岁，女性 79 岁
   </p>
 </div>

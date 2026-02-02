@@ -6,8 +6,8 @@
 
   let result: LifeCalculation | null = null;
 
-  function handleCalculate(birthDate: Date, gender: Gender) {
-    result = calculateLifePercent({ birthDate, gender });
+  function handleCalculate(birthDate: Date, gender: Gender, medianAge: number) {
+    result = calculateLifePercent({ birthDate, gender, medianAge });
   }
 
   function handleReset() {
@@ -55,7 +55,7 @@
           </div>
           <div class="h-px bg-amber-500/20" />
           <p class="text-xs text-slate-400">
-            若不确定出生日期，可使用下方快速按钮预设，或直接粘贴 `YYYY-MM-DD` 格式。
+            如有需要，可在输入面板中自定义中位寿命参考值。
           </p>
         </div>
 
