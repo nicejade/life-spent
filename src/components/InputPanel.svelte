@@ -327,7 +327,8 @@
       </div>
     </fieldset>
 
-    <div class="space-y-2">
+    <div class="flex flex-row items-center justify-around">
+      <div class="space-y-2">
       <p class="text-sm font-medium text-slate-300">
         平均预期寿命
       </p>
@@ -348,29 +349,30 @@
       <p class="text-xs text-slate-500">
         不同国家和地区的预期寿命存在差异，可根据实际情况调整
       </p>
-    </div>
-
-    <div class="space-y-2">
-      <p class="text-sm font-medium text-slate-300">
-        人口中位年龄
-      </p>
-      <div class="flex items-center gap-2">
-        <input
-          type="text"
-          inputmode="decimal"
-          pattern={NUMERIC_PATTERN}
-          value={populationMedianAgeInput}
-          on:input={handlePopulationMedianAgeInput}
-          class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
-                 text-slate-200 text-center transition-all
-                 focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
-          aria-label="人口中位年龄（可输入小数）"
-        />
-        <span class="text-slate-400">岁</span>
       </div>
-      <p class="text-xs text-slate-500">
-        可根据实际情况调整
-      </p>
+
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-slate-300">
+          人口中位年龄
+        </p>
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            inputmode="decimal"
+            pattern={NUMERIC_PATTERN}
+            value={populationMedianAgeInput}
+            on:input={handlePopulationMedianAgeInput}
+            class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
+                  text-slate-200 text-center transition-all
+                  focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
+            aria-label="人口中位年龄（可输入小数）"
+          />
+          <span class="text-slate-400">岁</span>
+        </div>
+        <p class="text-xs text-slate-500">
+          可根据实际情况调整
+        </p>
+      </div>
     </div>
 
     {#if error}
