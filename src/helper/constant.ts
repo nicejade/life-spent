@@ -4,3 +4,11 @@ export const MIN_YEAR = 1929;
 export const DEFAULT_BIRTH_YEAR = '1996'
 export const DEFAULT_BIRTH_MONTH = '1';
 export const DEFAULT_BIRTH_DAY = '1';
+
+// 人口中位年龄范围限制
+export const POPULATION_MEDIAN_AGE_MIN = 20;
+export const POPULATION_MEDIAN_AGE_MAX = 60;
+
+// 平均预期寿命范围限制
+export const LIFE_EXPECTANCY_MIN = 60;
+export const LIFE_EXPECTANCY_MAX = 100;

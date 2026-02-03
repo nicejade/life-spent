@@ -1,7 +1,17 @@
 <script lang="ts">
   import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, validateBirthDate } from '../helper/lifeSpent';
   import CustomSelect from './Select.svelte';
-  import { STORAGE_KEY, MIN_YEAR, DEFAULT_BIRTH_YEAR, DEFAULT_BIRTH_MONTH, DEFAULT_BIRTH_DAY } from '../helper/constant';
+  import { 
+    STORAGE_KEY,
+    MIN_YEAR,
+    DEFAULT_BIRTH_YEAR,
+    DEFAULT_BIRTH_MONTH,
+    DEFAULT_BIRTH_DAY,
+    POPULATION_MEDIAN_AGE_MIN,
+    POPULATION_MEDIAN_AGE_MAX,
+    LIFE_EXPECTANCY_MIN,
+    LIFE_EXPECTANCY_MAX
+  } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
 
   interface StoredSettings {
@@ -62,12 +72,20 @@
 
   function getLifeExpectancy(): number {
     const parsed = parseFloat(lifeExpectancyInput);
-    return isNaN(parsed) || parsed < 0 ? DEFAULT_LIFE_EXPECTANCY[gender] : parsed;
+    if (isNaN(parsed) || parsed < 0) {
+      return DEFAULT_LIFE_EXPECTANCY[gender];
+    }
+    // 限制在有效范围内
+    return Math.max(LIFE_EXPECTANCY_MIN, Math.min(LIFE_EXPECTANCY_MAX, parsed));
   }
 
   function getPopulationMedianAge(): number {
     const parsed = parseFloat(populationMedianAgeInput);
-    return isNaN(parsed) || parsed < 0 ? DEFAULT_POPULATION_MEDIAN_AGE : parsed;
+    if (isNaN(parsed) || parsed < 0) {
+      return DEFAULT_POPULATION_MEDIAN_AGE;
+    }
+    // 限制在有效范围内
+    return Math.max(POPULATION_MEDIAN_AGE_MIN, Math.min(POPULATION_MEDIAN_AGE_MAX, parsed));
   }
 
   export let onCalculate: (
@@ -205,6 +223,24 @@
 
     const lifeExpectancy = getLifeExpectancy();
     const populationMedianAge = getPopulationMedianAge();
+
+    // 验证输入值是否在有效范围内
+    const lifeExpectancyValue = parseFloat(lifeExpectancyInput);
+    if (!isNaN(lifeExpectancyValue)) {
+      if (lifeExpectancyValue < LIFE_EXPECTANCY_MIN || lifeExpectancyValue > LIFE_EXPECTANCY_MAX) {
+        error = `平均预期寿命应在 ${LIFE_EXPECTANCY_MIN} 到 ${LIFE_EXPECTANCY_MAX} 岁之间`;
+        return;
+      }
+    }
+
+    const medianAgeValue = parseFloat(populationMedianAgeInput);
+    if (!isNaN(medianAgeValue)) {
+      if (medianAgeValue < POPULATION_MEDIAN_AGE_MIN || medianAgeValue > POPULATION_MEDIAN_AGE_MAX) {
+        error = `人口中位年龄应在 ${POPULATION_MEDIAN_AGE_MIN} 到 ${POPULATION_MEDIAN_AGE_MAX} 岁之间`;
+        return;
+      }
+    }
+
     onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge);
   }
 </script>
@@ -298,7 +334,6 @@
       <div class="flex items-center gap-2">
         <input
           type="number"
-          step="0.01"
           inputmode="decimal"
           pattern={NUMERIC_PATTERN}
           value={lifeExpectancyInput}
@@ -322,7 +357,6 @@
       <div class="flex items-center gap-2">
         <input
           type="number"
-          step="0.01"
           inputmode="decimal"
           pattern={NUMERIC_PATTERN}
           value={populationMedianAgeInput}
