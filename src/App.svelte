@@ -16,13 +16,19 @@
       result = calculateLifePercent({
         birthDate,
         gender: shareParams.gender,
-        medianAge: shareParams.medianAge
+        lifeExpectancy: shareParams.lifeExpectancy,
+        populationMedianAge: shareParams.populationMedianAge
       });
     }
   });
 
-  function handleCalculate(birthDate: Date, gender: Gender, medianAge: number) {
-    result = calculateLifePercent({ birthDate, gender, medianAge });
+  function handleCalculate(
+    birthDate: Date,
+    gender: Gender,
+    lifeExpectancy: number,
+    populationMedianAge: number
+  ) {
+    result = calculateLifePercent({ birthDate, gender, lifeExpectancy, populationMedianAge });
   }
 
   function handleReset() {
@@ -50,7 +56,7 @@
         透过数据，与生命的流逝保持恰到好处的距离
       </h1>
       <p class="text-base md:text-lg text-slate-300 max-w-3xl">
-        以简洁的界面告诉你已走过的岁月，借助中位寿命提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
+        以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
       </p>
     </header>
 
@@ -67,14 +73,14 @@
         <div class="glass-card rounded-2xl p-6 space-y-3">
           <p class="text-xs uppercase tracking-[0.4em] text-slate-500">提醒</p>
           <p class="text-sm text-slate-200 leading-relaxed">
-            中位寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。
+            平均预期寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。
           </p>
           <div class="text-[0.75rem] text-slate-400/80 tracking-[0.3em] uppercase">
             男 73 · 女 79
           </div>
           <div class="h-px bg-amber-500/20" />
           <p class="text-xs text-slate-400">
-            如有需要，可在输入面板中自定义中位寿命参考值。
+            如有需要，可在输入面板中自定义平均预期寿命与人群中位年龄参考值。
           </p>
         </div>
 

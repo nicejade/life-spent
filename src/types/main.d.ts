@@ -9,14 +9,18 @@ export interface SelectItem {
 export interface BirthInfo {
   birthDate: Date;
   gender: Gender;
-  medianAge?: number;
+  lifeExpectancy?: number;
+  populationMedianAge?: number;
 }
 
 export interface LifeCalculation {
   birthDate: Date;
   currentAge: number;
   gender: Gender;
-  medianAge: number;
+  lifeExpectancy: number;
+  populationMedianAge: number;
   percentSpent: number;
   yearsRemaining: number;
+  relativeAgePercent: number;
+  yearsToMedianAge: number;
 }

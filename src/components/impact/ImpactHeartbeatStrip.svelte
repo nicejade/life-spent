@@ -5,7 +5,7 @@
   export let result: LifeCalculation;
   export let data: ImpactData;
 
-  $: maxThreshold = Math.max(...data.thresholds.map((t) => t.age), result.medianAge);
+  $: maxThreshold = Math.max(...data.thresholds.map((t) => t.age), result.lifeExpectancy);
   $: cursorPercent = (result.currentAge / maxThreshold) * 100;
 </script>
 

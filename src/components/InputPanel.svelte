@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DEFAULT_MEDIAN_AGE, validateBirthDate } from '../helper/lifeSpent';
+  import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, validateBirthDate } from '../helper/lifeSpent';
   import CustomSelect from './Select.svelte';
   import { STORAGE_KEY, MIN_YEAR, DEFAULT_BIRTH_YEAR, DEFAULT_BIRTH_MONTH, DEFAULT_BIRTH_DAY } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
@@ -9,7 +9,8 @@
     selectedMonth: string;
     selectedDay: string;
     gender: Gender;
-    medianAgeInput: string;
+    lifeExpectancyInput: string;
+    populationMedianAgeInput: string;
   }
 
   function loadSettings(): StoredSettings | null {
@@ -33,30 +34,48 @@
   }
 
 
-  function handleMedianAgeInput(e: Event) {
-    const input = e.target as HTMLInputElement;
-    let value = input.value.replace(/[^0-9.]/g, '');
+  function sanitizeNumericInput(value: string) {
+    let cleaned = value.replace(/[^0-9.]/g, '');
     
     // 限制只能有一个小数点
-    const parts = value.split('.');
+    const parts = cleaned.split('.');
     if (parts.length > 2) {
-      value = parts[0] + '.' + parts.slice(1).join('');
+      cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
     
     if (parts[1] && parts[1].length > 2) {
-      value = parts[0] + '.' + parts[1].slice(0, 2);
+      cleaned = parts[0] + '.' + parts[1].slice(0, 2);
     }
     
-    // 不能为负数（已经通过正则过滤了负号）
-    medianAgeInput = value;
+    return cleaned;
   }
 
-  function getMedianAge(): number {
-    const parsed = parseFloat(medianAgeInput);
-    return isNaN(parsed) || parsed < 0 ? DEFAULT_MEDIAN_AGE[gender] : parsed;
+  function handleLifeExpectancyInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    lifeExpectancyInput = sanitizeNumericInput(input.value);
   }
 
-  export let onCalculate: (birthDate: Date, gender: Gender, medianAge: number) => void;
+  function handlePopulationMedianAgeInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    populationMedianAgeInput = sanitizeNumericInput(input.value);
+  }
+
+  function getLifeExpectancy(): number {
+    const parsed = parseFloat(lifeExpectancyInput);
+    return isNaN(parsed) || parsed < 0 ? DEFAULT_LIFE_EXPECTANCY[gender] : parsed;
+  }
+
+  function getPopulationMedianAge(): number {
+    const parsed = parseFloat(populationMedianAgeInput);
+    return isNaN(parsed) || parsed < 0 ? DEFAULT_POPULATION_MEDIAN_AGE : parsed;
+  }
+
+  export let onCalculate: (
+    birthDate: Date,
+    gender: Gender,
+    lifeExpectancy: number,
+    populationMedianAge: number
+  ) => void;
 
   const currentYear = new Date().getFullYear();
 
@@ -81,9 +100,9 @@
     return { name: `${pad(m)} 月`, value: String(m) };
   });
 
-  const MEDIAN_AGE_DEFAULT_MALE = DEFAULT_MEDIAN_AGE.male;
-  const MEDIAN_AGE_DEFAULT_FEMALE = DEFAULT_MEDIAN_AGE.female;
-  const MEDIAN_AGE_PATTERN = '[0-9]*\\.?[0-9]{0,2}';
+  const LIFE_EXPECTANCY_DEFAULT_MALE = DEFAULT_LIFE_EXPECTANCY.male;
+  const LIFE_EXPECTANCY_DEFAULT_FEMALE = DEFAULT_LIFE_EXPECTANCY.female;
+  const NUMERIC_PATTERN = '[0-9]*\\.?[0-9]{0,2}';
 
   function getInitialSettings(): StoredSettings {
     const saved = loadSettings();
@@ -94,7 +113,8 @@
         selectedMonth: saved.selectedMonth || DEFAULT_BIRTH_MONTH,
         selectedDay: saved.selectedDay || DEFAULT_BIRTH_DAY,
         gender: g,
-        medianAgeInput: saved.medianAgeInput ?? String(DEFAULT_MEDIAN_AGE[g]),
+        lifeExpectancyInput: saved.lifeExpectancyInput ?? String(DEFAULT_LIFE_EXPECTANCY[g]),
+        populationMedianAgeInput: saved.populationMedianAgeInput ?? String(DEFAULT_POPULATION_MEDIAN_AGE),
       };
     }
     return {
@@ -102,7 +122,8 @@
       selectedMonth: DEFAULT_BIRTH_MONTH,
       selectedDay: DEFAULT_BIRTH_DAY,
       gender: 'male',
-      medianAgeInput: String(DEFAULT_MEDIAN_AGE.male),
+      lifeExpectancyInput: String(DEFAULT_LIFE_EXPECTANCY.male),
+      populationMedianAgeInput: String(DEFAULT_POPULATION_MEDIAN_AGE),
     };
   }
 
@@ -111,7 +132,8 @@
   let selectedMonth = initial.selectedMonth;
   let selectedDay = initial.selectedDay;
   let gender: Gender = initial.gender;
-  let medianAgeInput = initial.medianAgeInput;
+  let lifeExpectancyInput = initial.lifeExpectancyInput;
+  let populationMedianAgeInput = initial.populationMedianAgeInput;
 
   $: dayOptions = (() => {
     const y = parseInt(selectedYear, 10) || currentYear;
@@ -133,11 +155,11 @@
 
   let error = '';
 
-  // 根据性别设置默认中位数年龄输入值
-  $: if (gender === 'male' && medianAgeInput === String(MEDIAN_AGE_DEFAULT_FEMALE)) {
-    medianAgeInput = String(MEDIAN_AGE_DEFAULT_MALE);
-  } else if (gender === 'female' && medianAgeInput === String(MEDIAN_AGE_DEFAULT_MALE)) {
-    medianAgeInput = String(MEDIAN_AGE_DEFAULT_FEMALE);
+  // 根据性别设置默认平均预期寿命输入值
+  $: if (gender === 'male' && lifeExpectancyInput === String(LIFE_EXPECTANCY_DEFAULT_FEMALE)) {
+    lifeExpectancyInput = String(LIFE_EXPECTANCY_DEFAULT_MALE);
+  } else if (gender === 'female' && lifeExpectancyInput === String(LIFE_EXPECTANCY_DEFAULT_MALE)) {
+    lifeExpectancyInput = String(LIFE_EXPECTANCY_DEFAULT_FEMALE);
   }
 
   $: saveSettings({
@@ -145,7 +167,8 @@
     selectedMonth,
     selectedDay,
     gender,
-    medianAgeInput
+    lifeExpectancyInput,
+    populationMedianAgeInput
   });
 
   function handleYearSelect(e: CustomEvent<SelectItem>) {
@@ -180,8 +203,9 @@
       return;
     }
 
-    const medianAge = getMedianAge();
-    onCalculate(birthDate, gender, medianAge);
+    const lifeExpectancy = getLifeExpectancy();
+    const populationMedianAge = getPopulationMedianAge();
+    onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge);
   }
 </script>
 
@@ -190,10 +214,10 @@
     <h1 class="text-3xl md:text-4xl font-light text-slate-100">
       人生已度过
     </h1>
-    <p class="text-sm text-slate-400">
+      <p class="text-sm text-slate-400">
       用数学告诉你时间的真相，静默但不沉闷。
-    </p>
-  </div>
+      </p>
+    </div>
 
   <form on:submit|preventDefault={handleSubmit} class="space-y-6">
     <div class="space-y-2" role="group" aria-labelledby="birthdate-label">
@@ -231,7 +255,7 @@
 
     <fieldset class="space-y-3 border-0 p-0">
       <legend class="text-sm font-medium text-slate-300">
-        性别
+        选择性别
       </legend>
       <div class="flex gap-4">
         <label class="flex-1 cursor-pointer">
@@ -269,24 +293,49 @@
 
     <div class="space-y-2">
       <p class="text-sm font-medium text-slate-300">
-        中位寿命
+        平均预期寿命
       </p>
       <div class="flex items-center gap-2">
         <input
           type="number"
+          step="0.01"
           inputmode="decimal"
-          pattern={MEDIAN_AGE_PATTERN}
-          value={medianAgeInput}
-          on:input={handleMedianAgeInput}
+          pattern={NUMERIC_PATTERN}
+          value={lifeExpectancyInput}
+          on:input={handleLifeExpectancyInput}
           class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
                  text-slate-200 text-center transition-all
                  focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
-          aria-label="中位寿命（可输入小数）"
+          aria-label="平均预期寿命（可输入小数）"
         />
         <span class="text-slate-400">岁</span>
       </div>
       <p class="text-xs text-slate-500">
         不同国家和地区的预期寿命存在差异，可根据实际情况调整
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <p class="text-sm font-medium text-slate-300">
+        人口中位年龄
+      </p>
+      <div class="flex items-center gap-2">
+        <input
+          type="number"
+          step="0.01"
+          inputmode="decimal"
+          pattern={NUMERIC_PATTERN}
+          value={populationMedianAgeInput}
+          on:input={handlePopulationMedianAgeInput}
+          class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
+                 text-slate-200 text-center transition-all
+                 focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
+          aria-label="人口中位年龄（可输入小数）"
+        />
+        <span class="text-slate-400">岁</span>
+      </div>
+      <p class="text-xs text-slate-500">
+        默认值为中国人口中位年龄 39.6 岁，可根据所在国家调整
       </p>
     </div>
 
@@ -312,6 +361,6 @@
   </form>
 
   <p class="text-xs text-slate-500 mt-1 text-center">
-    默认参考值：男性 73 岁，女性 79 岁
+    默认参考值：平均预期寿命 男性 73 岁，女性 79 岁 · 人口中位年龄 39.6 岁
   </p>
 </div>

@@ -1,14 +1,16 @@
 import type { BirthInfo, LifeCalculation } from '../types/main'
 
-export const DEFAULT_MEDIAN_AGE = {
+export const DEFAULT_LIFE_EXPECTANCY = {
   male: 73,
   female: 79
 } as const;
 
-/** Human known maximum age; used when current age exceeds median. */
+export const DEFAULT_POPULATION_MEDIAN_AGE = 39.6;
+
+/** Human known maximum age; used when current age exceeds life expectancy. */
 export const MAX_HUMAN_AGE = 122;
 
-/** Strata bounds (years): 0–20, 20–40, 40–60, 60–median. */
+/** Strata bounds (years): 0–20, 20–40, 40–60, 60–life expectancy. */
 export const STRATA_BOUNDS = [0, 20, 40, 60] as const;
 
 /** Key age thresholds for heartbeat strip (years). */
@@ -28,13 +30,13 @@ export interface ImpactData {
 }
 
 export function getImpactData(result: LifeCalculation): ImpactData {
-  const { currentAge, medianAge } = result;
-  const totalYears = currentAge >= medianAge ? MAX_HUMAN_AGE : medianAge;
+  const { currentAge, lifeExpectancy } = result;
+  const totalYears = currentAge >= lifeExpectancy ? MAX_HUMAN_AGE : lifeExpectancy;
   const totalWeeks = Math.round(totalYears * 52);
   const weeksSpent = Math.min(Math.round(currentAge * 52), totalWeeks);
 
   const strata: ImpactData['strata'] = STRATA_BOUNDS.map((start, i) => {
-    const end = i === STRATA_BOUNDS.length - 1 ? medianAge : STRATA_BOUNDS[i + 1];
+    const end = i === STRATA_BOUNDS.length - 1 ? lifeExpectancy : STRATA_BOUNDS[i + 1];
     const spent = currentAge >= end;
     return {
       start,
@@ -49,7 +51,7 @@ export function getImpactData(result: LifeCalculation): ImpactData {
     passed: currentAge >= age
   }));
 
-  const gridTotalCells = currentAge >= medianAge ? MAX_HUMAN_AGE : medianAge;
+  const gridTotalCells = currentAge >= lifeExpectancy ? MAX_HUMAN_AGE : lifeExpectancy;
   const gridCellsSpent = Math.min(Math.floor(currentAge), gridTotalCells);
   const lastBound = gridTotalCells;
 
@@ -80,17 +82,23 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
   const ageInMilliseconds = now.getTime() - birth.getTime();
   const currentAge = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
   
-  const medianAge = info.medianAge ?? DEFAULT_MEDIAN_AGE[info.gender];
-  const percentSpent = (currentAge / medianAge) * 100;
-  const yearsRemaining = medianAge - currentAge;
+  const lifeExpectancy = info.lifeExpectancy ?? DEFAULT_LIFE_EXPECTANCY[info.gender];
+  const populationMedianAge = info.populationMedianAge ?? DEFAULT_POPULATION_MEDIAN_AGE;
+  const percentSpent = (currentAge / lifeExpectancy) * 100;
+  const yearsRemaining = lifeExpectancy - currentAge;
+  const relativeAgePercent = (currentAge / populationMedianAge) * 100;
+  const yearsToMedianAge = populationMedianAge - currentAge;
   
   return {
     birthDate: birth,
     currentAge: Math.max(0, currentAge),
     gender: info.gender,
-    medianAge,
+    lifeExpectancy,
+    populationMedianAge,
     percentSpent: Math.min(100, Math.max(0, percentSpent)),
-    yearsRemaining: Math.max(0, yearsRemaining)
+    yearsRemaining: Math.max(0, yearsRemaining),
+    relativeAgePercent: Math.max(0, relativeAgePercent),
+    yearsToMedianAge
   };
 }
 

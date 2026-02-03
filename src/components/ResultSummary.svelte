@@ -22,12 +22,23 @@
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
   $: impactData = getImpactData(result);
+  $: relativePercentDisplay = result.relativeAgePercent.toFixed(1);
+  $: medianGap = result.yearsToMedianAge;
+  $: medianGapLabel =
+    medianGap >= 0
+      ? `距离人口中位年龄还有 ${formatAge(medianGap)}`
+      : `已超过人口中位年龄 ${formatAge(Math.abs(medianGap))}`;
+  $: expectancyGapLabel =
+    result.yearsRemaining > 0
+      ? `距离平均预期寿命还有 ${formatAge(result.yearsRemaining)}`
+      : '已到达平均预期寿命参考值';
 
   // Build share URL when result changes
   $: shareUrl = buildShareUrl({
     birth: dateToBirthString(result.birthDate),
     gender: result.gender,
-    medianAge: result.medianAge
+    lifeExpectancy: result.lifeExpectancy,
+    populationMedianAge: result.populationMedianAge
   });
 
   async function handleShare() {
@@ -60,10 +71,10 @@
           role="presentation"
         />
       </div>
-      <p class="text-[0.65rem] uppercase tracking-[0.4em] text-slate-500">
-        余下 {remainingPercent}% · 参考中位寿命是统计
-      </p>
-    </div>
+    <p class="text-[0.65rem] uppercase tracking-[0.4em] text-slate-500">
+        余下 {remainingPercent}% · 参考平均预期寿命是统计
+    </p>
+  </div>
   </div>
 
   <div class="space-y-4">
@@ -144,18 +155,43 @@
       <dd class="font-medium text-slate-100">{formatAge(result.currentAge)}</dd>
     </div>
     <div class="flex flex-col">
-      <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">参考中位寿命</dt>
-      <dd class="font-medium text-slate-100">{result.medianAge} 岁</dd>
+      <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">平均预期寿命</dt>
+      <dd class="font-medium text-slate-100">{result.lifeExpectancy} 岁</dd>
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">预计剩余</dt>
       <dd class="font-medium text-slate-100">{formatAge(result.yearsRemaining)}</dd>
     </div>
+    <div class="flex flex-col">
+      <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">人口中位年龄</dt>
+      <dd class="font-medium text-slate-100">{result.populationMedianAge} 岁</dd>
+    </div>
+    <div class="flex flex-col">
+      <dt class="text-xs text-slate-500 uppercase tracking-[0.3em]">相对年龄位置</dt>
+      <dd class="font-medium text-slate-100">{relativePercentDisplay}%</dd>
+    </div>
   </dl>
 
+  <div class="grid gap-3 md:grid-cols-2">
+    <div class="glass-card rounded-xl border border-slate-700/60 p-4 text-sm text-slate-300 space-y-2">
+      <p class="text-xs uppercase tracking-[0.3em] text-slate-500">相对年龄</p>
+      <p class="text-slate-100 font-medium">{medianGapLabel}</p>
+      <p class="text-xs text-slate-400">
+        当你超过人口中位年龄，意味着你已比一半的人更年长。
+      </p>
+    </div>
+    <div class="glass-card rounded-xl border border-amber-500/20 p-4 text-sm text-slate-300 space-y-2">
+      <p class="text-xs uppercase tracking-[0.3em] text-amber-400/80">预期寿命</p>
+      <p class="text-amber-300 font-medium">{expectancyGapLabel}</p>
+      <p class="text-xs text-slate-400">
+        这是一个统计参考，不是命运。它提醒我们该把时间放在真正重要的地方。
+      </p>
+    </div>
+  </div>
+
   <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm text-slate-300 leading-relaxed space-y-2">
-    <p>中位寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。</p>
-    <p class="text-amber-300/90 font-medium">若你已过三十有五，那道「还年轻」的门槛早已在身后。</p>
+    <p>平均预期寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。</p>
+    <p class="text-amber-300/90 font-medium">若你已接近人群中位年龄，那道「还年轻」的门槛早已在身后。</p>
   </div>
 
   <div class="flex gap-3">

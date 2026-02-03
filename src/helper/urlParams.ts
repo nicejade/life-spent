@@ -1,13 +1,15 @@
 import type { Gender } from '../types/main';
+import { DEFAULT_POPULATION_MEDIAN_AGE } from './lifeSpent';
 
 /**
  * URL query parameters for sharing life calculation results.
- * Format: ?birth=YYYYMMDD&gender=male|female&median-age=77
+ * Format: ?birth=YYYYMMDD&gender=male|female&life-expectancy=77&median-pop-age=39.6
  */
 export interface ShareParams {
   birth: string; // Format: YYYYMMDD (e.g., "19961228")
   gender: Gender;
-  medianAge: number;
+  lifeExpectancy: number;
+  populationMedianAge: number;
 }
 
 /**
@@ -24,7 +26,8 @@ export function buildShareUrl(params: ShareParams): string {
   // Add new parameters
   url.searchParams.set('birth', params.birth);
   url.searchParams.set('gender', params.gender);
-  url.searchParams.set('median-age', String(params.medianAge));
+  url.searchParams.set('life-expectancy', String(params.lifeExpectancy));
+  url.searchParams.set('median-pop-age', String(params.populationMedianAge));
   
   return url.toString();
 }
@@ -37,10 +40,12 @@ export function parseShareParams(): ShareParams | null {
   const url = new URL(window.location.href);
   const birth = url.searchParams.get('birth');
   const gender = url.searchParams.get('gender');
-  const medianAge = url.searchParams.get('median-age');
+  const lifeExpectancy = url.searchParams.get('life-expectancy');
+  const populationMedianAge = url.searchParams.get('median-pop-age');
+  const legacyMedianAge = url.searchParams.get('median-age');
   
   // Validate required parameters
-  if (!birth || !gender || !medianAge) {
+  if (!birth || !gender || (!lifeExpectancy && !legacyMedianAge)) {
     return null;
   }
   
@@ -54,9 +59,17 @@ export function parseShareParams(): ShareParams | null {
     return null;
   }
   
-  // Validate median age (positive number, max 150)
-  const medianAgeNum = parseFloat(medianAge);
-  if (isNaN(medianAgeNum) || medianAgeNum <= 0 || medianAgeNum > 150) {
+  // Validate life expectancy (positive number, max 150)
+  const lifeExpectancyNum = parseFloat(lifeExpectancy ?? legacyMedianAge ?? '');
+  if (isNaN(lifeExpectancyNum) || lifeExpectancyNum <= 0 || lifeExpectancyNum > 150) {
+    return null;
+  }
+
+  // Validate population median age (positive number, max 120)
+  const populationMedianAgeNum = populationMedianAge
+    ? parseFloat(populationMedianAge)
+    : DEFAULT_POPULATION_MEDIAN_AGE;
+  if (isNaN(populationMedianAgeNum) || populationMedianAgeNum <= 0 || populationMedianAgeNum > 120) {
     return null;
   }
   
@@ -76,7 +89,8 @@ export function parseShareParams(): ShareParams | null {
   return {
     birth,
     gender: gender as Gender,
-    medianAge: medianAgeNum
+    lifeExpectancy: lifeExpectancyNum,
+    populationMedianAge: populationMedianAgeNum
   };
 }
 

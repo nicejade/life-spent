@@ -26,6 +26,6 @@
     {/each}
   </div>
   <p class="text-[0.65rem] uppercase tracking-[0.3em] text-slate-500">
-    已过 {data.weeksSpent} 周 / 共 {data.totalWeeks} 周（以中位寿命计）
+    已过 {data.weeksSpent} 周 / 共 {data.totalWeeks} 周（以平均预期寿命计）
   </p>
 </div>
