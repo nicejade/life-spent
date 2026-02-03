@@ -10,7 +10,7 @@
 </script>
 
 <div class="space-y-3" role="img" aria-label="生命周历：已度过 {data.weeksSpent} 周，共 {data.totalWeeks} 周">
-  <p class="text-xs uppercase tracking-[0.4em] text-slate-500">
+  <p class="text-xs uppercase tracking-[0.4em] text-neutral-500 light:text-neutral-600">
     周历墙 · 每一格是一周
   </p>
   <div class="flex flex-wrap gap-0.5 max-h-[280px] overflow-y-auto overflow-x-hidden">
@@ -19,13 +19,13 @@
       {@const filled = i < spentDense}
       <div
         class="w-2 h-2 rounded-sm transition-colors duration-300 {filled
-          ? 'bg-amber-400/90'
-          : 'bg-slate-700/60 border border-slate-600/50'}"
+          ? 'bg-paper-100/90 light:bg-ink-950'
+          : 'bg-white/5 border border-white/10 light:bg-black/5 light:border-black/10'}"
         title="{i * DENSE_STEP}–{Math.min((i + 1) * DENSE_STEP, data.totalWeeks)} 周"
       />
     {/each}
   </div>
-  <p class="text-[0.65rem] uppercase tracking-[0.3em] text-slate-500">
+  <p class="text-[0.65rem] uppercase tracking-[0.3em] text-neutral-500 light:text-neutral-600">
     已过 {data.weeksSpent} 周 / 共 {data.totalWeeks} 周（以平均预期寿命计）
   </p>
 </div>

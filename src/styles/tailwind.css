@@ -3,13 +3,26 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply antialiased;
+  }
+
   body {
-    @apply bg-slate-950 text-slate-100 antialiased;
+    @apply bg-ink-950 text-paper-50 antialiased font-sans transition-colors duration-300 motion-reduce:transition-none;
+  }
+
+  .light body {
+    @apply bg-paper-50 text-ink-950 antialiased font-sans;
   }
 }
 
-@layer utilities {
+@layer components {
+  /* Dark: subtle glass; Light: high-contrast paper (Jobs-style clarity) */
   .glass-card {
-    @apply bg-slate-900/40 backdrop-blur-glass border border-slate-800/50;
+    @apply bg-white/[0.06] backdrop-blur-glass border border-white/[0.12] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.5)] transition-colors duration-300;
+  }
+
+  .light .glass-card {
+    @apply bg-white/90 backdrop-blur-glass border border-black/[0.08] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.08)];
   }
 }

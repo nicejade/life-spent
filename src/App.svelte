@@ -2,11 +2,17 @@
   import { onMount } from 'svelte';
   import { calculateLifePercent } from './helper/lifeSpent';
   import { parseShareParams, birthStringToDate } from './helper/urlParams';
+  import { theme } from './helper/theme';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
+  import SvgIcon from './components/SvgIcon.svelte';
   import type { Gender, LifeCalculation } from './types/main';
 
   let result: LifeCalculation | null = null;
+
+  function toggleTheme() {
+    theme.update(t => t === 'dark' ? 'light' : 'dark');
+  }
 
   // Check for share parameters on mount
   onMount(() => {
@@ -40,25 +46,40 @@
   }
 </script>
 
-<main class="min-h-screen relative overflow-hidden bg-slate-950 text-slate-100">
-  <div class="pointer-events-none absolute inset-0">
-    <div class="absolute -top-16 left-1/2 w-[520px] h-[520px] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
-    <div class="absolute bottom-0 right-0 w-[360px] h-[360px] bg-amber-500/10 blur-3xl" />
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.2),_transparent_55%)]" />
+<main class="min-h-screen relative overflow-hidden bg-ink-950 text-paper-50 light:bg-paper-50 light:text-ink-950 transition-colors duration-300 motion-reduce:transition-none">
+  <div class="pointer-events-none absolute inset-0 transition-colors duration-300 motion-reduce:transition-none">
+    <div class="absolute -top-16 left-1/2 w-[520px] h-[520px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl light:bg-black/5" />
+    <div class="absolute bottom-0 right-0 w-[360px] h-[360px] bg-paper-100/10 blur-3xl light:bg-black/5" />
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_55%)] light:bg-[radial-gradient(circle_at_top,_rgba(15,15,15,0.08),_transparent_55%)]" />
   </div>
 
   <div class="relative z-10 container mx-auto px-4 py-12 lg:py-16 space-y-10">
-    <header class="max-w-4xl space-y-3 text-center md:text-left">
-      <p class="text-xs uppercase tracking-[0.5em] text-amber-400/70">
-        LifeSpent · 反思之旅
-      </p>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
-        透过数据，与生命的流逝保持恰到好处的距离
-      </h1>
-      <p class="text-base md:text-lg text-slate-300 max-w-3xl">
-        以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
-      </p>
-    </header>
+    <div class="flex items-center justify-between md:justify-start md:space-x-6">
+      <header class="flex-1 max-w-4xl space-y-3 text-center md:text-left">
+        <p class="text-xs uppercase tracking-[0.5em] text-paper-200/70 light:text-ink-500">
+          LifeSpent · 反思之旅
+        </p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
+          透过数据，与生命的流逝保持恰到好处的距离
+        </h1>
+        <p class="text-base md:text-lg text-neutral-300 light:text-neutral-700 max-w-3xl">
+          以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
+        </p>
+      </header>
+
+      <button
+        on:click={toggleTheme}
+        class="theme-toggle p-3 rounded-xl transition-all duration-300 cursor-pointer text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10"
+        aria-label="切换主题"
+        title="切换主题"
+      >
+        {#if $theme === 'dark'}
+          <SvgIcon name="sun" width={20} height={20} color="currentColor" />
+        {:else}
+          <SvgIcon name="moon" width={20} height={20} color="currentColor" />
+        {/if}
+      </button>
+    </div>
 
     <section class="flex flex-col gap-8 xl:flex-row xl:items-start">
       <div class="flex-1">
@@ -71,25 +92,25 @@
 
       <aside class="xl:w-72 space-y-4 flex-shrink-0">
         <div class="glass-card rounded-2xl p-6 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-500">提醒</p>
-          <p class="text-sm text-slate-200 leading-relaxed">
+          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">提醒</p>
+          <p class="text-sm text-neutral-200 light:text-neutral-700 leading-relaxed">
             平均预期寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。
           </p>
-          <div class="text-[0.75rem] text-slate-400/80 tracking-[0.3em] uppercase">
+          <div class="text-[0.75rem] text-neutral-400/80 light:text-neutral-500 tracking-[0.3em] uppercase">
             男 73 · 女 79
           </div>
-          <div class="h-px bg-amber-500/20" />
-          <p class="text-xs text-slate-400">
+          <div class="h-px bg-white/10 light:bg-black/10" />
+          <p class="text-xs text-neutral-400 light:text-neutral-600">
             如有需要，可在输入面板中自定义平均预期寿命与人群中位年龄参考值。
           </p>
         </div>
 
         <div class="glass-card rounded-2xl p-6 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-500">珍惜</p>
-          <p class="text-sm text-slate-200 leading-relaxed">
+          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">珍惜</p>
+          <p class="text-sm text-neutral-200 light:text-neutral-700 leading-relaxed">
             时间是最公平的礼物，每一秒都不可复制。与其焦虑未来，不如专注当下。
           </p>
-          <p class="text-sm text-amber-300">
+          <p class="text-sm text-paper-100 light:text-ink-900">
             珍惜此刻，就是珍惜生命本身。
           </p>
         </div>
@@ -97,7 +118,7 @@
     </section>
   </div>
 
-  <footer class="relative z-10 py-8 text-center text-xs text-slate-500">
+  <footer class="relative z-10 py-8 text-center text-xs text-neutral-500 light:text-neutral-600">
     <p>仅作提醒，珍惜时间</p>
   </footer>
 </main>

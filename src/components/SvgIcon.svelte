@@ -6,10 +6,14 @@
 
   import selectorSvg from '../assets/icons/selector.svg?raw'
   import checkSvg from '../assets/icons/check.svg?raw'
+  import sunSvg from '../assets/icons/sun.svg?raw'
+  import moonSvg from '../assets/icons/moon.svg?raw'
 
   const iconMap: Record<string, string> = {
     selector: selectorSvg,
     check: checkSvg,
+    sun: sunSvg,
+    moon: moonSvg,
   }
 
   $: svgContent = iconMap[name] || ''

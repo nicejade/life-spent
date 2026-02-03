@@ -247,17 +247,17 @@
 
 <div class="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full space-y-6">
   <div class="space-y-2">
-    <h1 class="text-3xl md:text-4xl font-light text-slate-100">
+    <h1 class="text-3xl md:text-4xl font-light text-paper-50 light:text-ink-950">
       人生已度过
     </h1>
-      <p class="text-sm text-slate-400">
+      <p class="text-sm text-neutral-400 light:text-neutral-600">
       用数学告诉你时间的真相，静默但不沉闷。
       </p>
     </div>
 
   <form on:submit|preventDefault={handleSubmit} class="space-y-6">
     <div class="space-y-2" role="group" aria-labelledby="birthdate-label">
-      <p id="birthdate-label" class="block text-sm font-medium text-slate-300">
+      <p id="birthdate-label" class="block text-sm font-medium text-neutral-300 light:text-neutral-700">
         出生日期
       </p>
       <div
@@ -290,7 +290,7 @@
     </div>
 
     <fieldset class="space-y-3 border-0 p-0">
-      <legend class="text-sm font-medium text-slate-300">
+      <legend class="text-sm font-medium text-neutral-300 light:text-neutral-700">
         选择性别
       </legend>
       <div class="flex gap-4">
@@ -303,9 +303,11 @@
             class="sr-only peer"
             aria-label="男性"
           />
-          <div class="px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
-                      text-center transition-all peer-checked:border-amber-400 
-                      peer-checked:bg-amber-500/10 peer-checked:text-amber-300">
+          <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+                      text-center transition-all peer-checked:border-paper-200/60 
+                      peer-checked:bg-white/10 peer-checked:text-paper-50
+                      light:bg-black/5 light:border-black/10 light:text-ink-700
+                      light:peer-checked:bg-black/10 light:peer-checked:text-ink-950">
             男性
           </div>
         </label>
@@ -318,9 +320,11 @@
             class="sr-only peer"
             aria-label="女性"
           />
-          <div class="px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
-                      text-center transition-all peer-checked:border-amber-400 
-                      peer-checked:bg-amber-500/10 peer-checked:text-amber-300">
+          <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+                      text-center transition-all peer-checked:border-paper-200/60 
+                      peer-checked:bg-white/10 peer-checked:text-paper-50
+                      light:bg-black/5 light:border-black/10 light:text-ink-700
+                      light:peer-checked:bg-black/10 light:peer-checked:text-ink-950">
             女性
           </div>
         </label>
@@ -329,7 +333,7 @@
 
     <div class="flex flex-row items-center justify-around">
       <div class="space-y-2">
-      <p class="text-sm font-medium text-slate-300">
+      <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
         平均预期寿命
       </p>
       <div class="flex items-center gap-2">
@@ -339,20 +343,22 @@
           pattern={NUMERIC_PATTERN}
           value={lifeExpectancyInput}
           on:input={handleLifeExpectancyInput}
-          class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
-                 text-slate-200 text-center transition-all
-                 focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
+          class="w-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+                 text-paper-50 text-center transition-all
+                 focus:border-paper-200/70 focus:outline-none focus:bg-white/10
+                 light:bg-black/5 light:border-black/10 light:text-ink-950
+                 light:focus:border-black/20 light:focus:bg-black/10"
           aria-label="平均预期寿命（可输入小数）"
         />
-        <span class="text-slate-400">岁</span>
+        <span class="text-neutral-400 light:text-neutral-600">岁</span>
       </div>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-neutral-500 light:text-neutral-600">
         不同国家和地区的预期寿命存在差异，可根据实际情况调整
       </p>
       </div>
 
       <div class="space-y-2">
-        <p class="text-sm font-medium text-slate-300">
+        <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
           人口中位年龄
         </p>
         <div class="flex items-center gap-2">
@@ -362,14 +368,16 @@
             pattern={NUMERIC_PATTERN}
             value={populationMedianAgeInput}
             on:input={handlePopulationMedianAgeInput}
-            class="w-32 px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl
-                  text-slate-200 text-center transition-all
-                  focus:border-amber-400 focus:outline-none focus:bg-slate-950/70"
+            class="w-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+                  text-paper-50 text-center transition-all
+                  focus:border-paper-200/70 focus:outline-none focus:bg-white/10
+                  light:bg-black/5 light:border-black/10 light:text-ink-950
+                  light:focus:border-black/20 light:focus:bg-black/10"
             aria-label="人口中位年龄（可输入小数）"
           />
-          <span class="text-slate-400">岁</span>
+          <span class="text-neutral-400 light:text-neutral-600">岁</span>
         </div>
-        <p class="text-xs text-slate-500">
+        <p class="text-xs text-neutral-500 light:text-neutral-600">
           可根据实际情况调整
         </p>
       </div>
@@ -387,8 +395,9 @@
 
     <button
       type="submit"
-      class="w-full px-6 py-4 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40
-             hover:border-amber-500/70 text-amber-400 rounded-xl font-medium transition-all
+      class="w-full px-6 py-4 bg-paper-50/95 hover:bg-paper-100 border border-paper-100/70
+             hover:border-paper-200 text-ink-950 rounded-xl font-medium transition-all
+             light:bg-ink-950 light:text-paper-50 light:border-ink-900 light:hover:bg-ink-900
              cursor-pointer active:scale-[0.98]"
       aria-label="计算人生已度过的百分比"
     >
@@ -396,7 +405,7 @@
     </button>
   </form>
 
-  <p class="text-xs text-slate-500 mt-1 text-center">
+  <p class="text-xs text-neutral-500 light:text-neutral-600 mt-1 text-center">
     默认参考值：平均预期寿命 男性 73 岁，女性 79 岁 · 人口中位年龄 39.6 岁
   </p>
 </div>
