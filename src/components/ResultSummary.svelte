@@ -56,11 +56,26 @@
 </script>
 
 <div class="glass-card rounded-2xl p-8 md:p-12 max-w-2xl w-full space-y-8">
+  <!-- 相对年龄位置 - 顶部突出显示 -->
+  <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-900/80 to-slate-950 border border-amber-500/20 p-6 text-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/5 to-transparent" />
+    <p class="relative text-xs md:text-sm uppercase tracking-[0.4em] text-amber-400/70 mb-2">
+      相对年龄位置
+    </p>
+    <p class="relative text-6xl md:text-8xl font-light text-amber-400 tracking-tight">
+      {relativePercentDisplay}<span class="text-3xl md:text-4xl">%</span>
+    </p>
+    <p class="relative text-xs text-slate-500 mt-3 tracking-widest">
+      比你年龄大的人群比例
+    </p>
+  </div>
+
+  <!-- 已度过百分比 -->
   <div class="text-center space-y-2">
-    <h2 class="text-5xl md:text-7xl font-light text-amber-400 tracking-tight">
+    <h2 class="text-5xl md:text-7xl font-light text-slate-200 tracking-tight">
       {percentDisplay}%
     </h2>
-    <p class="text-lg md:text-xl text-slate-300 font-light">
+    <p class="text-lg md:text-xl text-slate-400 font-light">
       已度过
     </p>
     <div class="space-y-1">

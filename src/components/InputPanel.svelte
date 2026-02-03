@@ -333,7 +333,7 @@
       </p>
       <div class="flex items-center gap-2">
         <input
-          type="number"
+          type="text"
           inputmode="decimal"
           pattern={NUMERIC_PATTERN}
           value={lifeExpectancyInput}
@@ -356,7 +356,7 @@
       </p>
       <div class="flex items-center gap-2">
         <input
-          type="number"
+          type="text"
           inputmode="decimal"
           pattern={NUMERIC_PATTERN}
           value={populationMedianAgeInput}
@@ -369,7 +369,7 @@
         <span class="text-slate-400">岁</span>
       </div>
       <p class="text-xs text-slate-500">
-        默认值为中国人口中位年龄 39.6 岁，可根据所在国家调整
+        可根据实际情况调整
       </p>
     </div>
 
