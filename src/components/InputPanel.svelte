@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DEFAULT_MEDIAN_AGE, validateBirthDate } from '../lib/lifeSpent';
+  import { DEFAULT_MEDIAN_AGE, validateBirthDate } from '../helper/lifeSpent';
   import CustomSelect from './Select.svelte';
   import { STORAGE_KEY, MIN_YEAR, DEFAULT_BIRTH_YEAR, DEFAULT_BIRTH_MONTH, DEFAULT_BIRTH_DAY } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';

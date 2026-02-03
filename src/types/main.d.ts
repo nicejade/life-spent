@@ -15,6 +15,7 @@ export interface BirthInfo {
 export interface LifeCalculation {
   birthDate: Date;
   currentAge: number;
+  gender: Gender;
   medianAge: number;
   percentSpent: number;
   yearsRemaining: number;

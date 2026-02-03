@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { formatAge, formatDate, getImpactData } from '../lib/lifeSpent';
+  import { formatAge, formatDate, getImpactData } from '../helper/lifeSpent';
+  import { buildShareUrl, copyShareUrl, dateToBirthString } from '../helper/urlParams';
   import ImpactWeeksWall from './impact/ImpactWeeksWall.svelte';
   import ImpactTimeStrata from './impact/ImpactTimeStrata.svelte';
   import ImpactHeartbeatStrip from './impact/ImpactHeartbeatStrip.svelte';
@@ -12,10 +13,35 @@
   type ImpactView = 'strata' | 'weeks' | 'heartbeat' | 'grid';
   let impactView: ImpactView = 'grid';
 
+  // Share functionality
+  let shareUrl = '';
+  let copySuccess = false;
+  let copyTimeout: ReturnType<typeof setTimeout> | null = null;
+
   $: percentDisplay = result.percentSpent.toFixed(2);
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
   $: impactData = getImpactData(result);
+
+  // Build share URL when result changes
+  $: shareUrl = buildShareUrl({
+    birth: dateToBirthString(result.birthDate),
+    gender: result.gender,
+    medianAge: result.medianAge
+  });
+
+  async function handleShare() {
+    const success = await copyShareUrl(shareUrl);
+    if (success) {
+      copySuccess = true;
+      // Clear previous timeout if exists
+      if (copyTimeout) clearTimeout(copyTimeout);
+      // Reset success message after 2 seconds
+      copyTimeout = setTimeout(() => {
+        copySuccess = false;
+      }, 2000);
+    }
+  }
 </script>
 
 <div class="glass-card rounded-2xl p-8 md:p-12 max-w-2xl w-full space-y-8">
@@ -132,12 +158,27 @@
     <p class="text-amber-300/90 font-medium">若你已过三十有五，那道「还年轻」的门槛早已在身后。</p>
   </div>
 
-  <button
-    on:click={onReset}
-    class="w-full px-6 py-3 bg-slate-950/50 hover:bg-slate-900/50 border border-slate-700 hover:border-slate-600
-           text-slate-300 rounded-xl transition-all cursor-pointer"
-    aria-label="重新计算"
-  >
-    重新计算
-  </button>
+  <div class="flex gap-3">
+    <button
+      on:click={handleShare}
+      class="flex-1 px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40
+             hover:border-amber-500/70 text-amber-400 rounded-xl transition-all cursor-pointer
+             active:scale-[0.98] flex items-center justify-center gap-2"
+      aria-label="分享计算结果"
+    >
+      {#if copySuccess}
+        <span class="text-amber-300">已复制</span>
+      {:else}
+        <span>分享链接</span>
+      {/if}
+    </button>
+    <button
+      on:click={onReset}
+      class="flex-1 px-6 py-3 bg-slate-950/50 hover:bg-slate-900/50 border border-slate-700 hover:border-slate-600
+             text-slate-300 rounded-xl transition-all cursor-pointer"
+      aria-label="重新计算"
+    >
+      重新计算
+    </button>
+  </div>
 </div>

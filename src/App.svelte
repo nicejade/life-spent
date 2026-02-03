@@ -1,10 +1,25 @@
 <script lang="ts">
-  import { calculateLifePercent } from './lib/lifeSpent';
+  import { onMount } from 'svelte';
+  import { calculateLifePercent } from './helper/lifeSpent';
+  import { parseShareParams, birthStringToDate } from './helper/urlParams';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import type { Gender, LifeCalculation } from './types/main';
 
   let result: LifeCalculation | null = null;
+
+  // Check for share parameters on mount
+  onMount(() => {
+    const shareParams = parseShareParams();
+    if (shareParams) {
+      const birthDate = birthStringToDate(shareParams.birth);
+      result = calculateLifePercent({
+        birthDate,
+        gender: shareParams.gender,
+        medianAge: shareParams.medianAge
+      });
+    }
+  });
 
   function handleCalculate(birthDate: Date, gender: Gender, medianAge: number) {
     result = calculateLifePercent({ birthDate, gender, medianAge });
@@ -12,6 +27,10 @@
 
   function handleReset() {
     result = null;
+    // Clear URL parameters when resetting
+    const url = new URL(window.location.href);
+    url.search = '';
+    window.history.replaceState({}, '', url.toString());
   }
 </script>
 
@@ -60,12 +79,12 @@
         </div>
 
         <div class="glass-card rounded-2xl p-6 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-500">氛围</p>
+          <p class="text-xs uppercase tracking-[0.4em] text-slate-500">珍惜</p>
           <p class="text-sm text-slate-200 leading-relaxed">
-            深色玻璃、细腻的光晕与柔和的金色，让严肃与温柔共存，这就是乔布斯式的典雅。
+            时间是最公平的礼物，每一秒都不可复制。与其焦虑未来，不如专注当下。
           </p>
           <p class="text-sm text-amber-300">
-            让 UI 成为提醒，而不是额外的干扰。
+            珍惜此刻，就是珍惜生命本身。
           </p>
         </div>
       </aside>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ImpactData } from '../../lib/lifeSpent';
+  import type { ImpactData } from '../../helper/lifeSpent';
 
   export let data: ImpactData;
 

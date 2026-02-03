@@ -87,6 +87,7 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
   return {
     birthDate: birth,
     currentAge: Math.max(0, currentAge),
+    gender: info.gender,
     medianAge,
     percentSpent: Math.min(100, Math.max(0, percentSpent)),
     yearsRemaining: Math.max(0, yearsRemaining)
