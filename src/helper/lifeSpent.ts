@@ -1,14 +1,5 @@
 import type { BirthInfo, LifeCalculation } from '../types/main'
-
-export const DEFAULT_LIFE_EXPECTANCY = {
-  male: 73,
-  female: 79
-} as const;
-
-export const DEFAULT_POPULATION_MEDIAN_AGE = 39.6;
-
-/** Human known maximum age; used when current age exceeds life expectancy. */
-export const MAX_HUMAN_AGE = 122;
+import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, MAX_HUMAN_AGE } from './constant'
 
 /** Strata bounds (years): 0–20, 20–40, 40–60, 60–life expectancy. */
 export const STRATA_BOUNDS = [0, 20, 40, 60] as const;
@@ -86,7 +77,8 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
   const populationMedianAge = info.populationMedianAge ?? DEFAULT_POPULATION_MEDIAN_AGE;
   const percentSpent = (currentAge / lifeExpectancy) * 100;
   const yearsRemaining = lifeExpectancy - currentAge;
-  const relativeAgePercent = (currentAge / populationMedianAge) * 100;
+  // 计算你比多少比例的人年纪大：当年龄为0时是0%，等于中位年龄时是50%，是中位年龄2倍时是100%
+  const relativeAgePercent = (currentAge / populationMedianAge) * 50;
   const yearsToMedianAge = populationMedianAge - currentAge;
   
   return {

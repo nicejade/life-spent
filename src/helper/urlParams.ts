@@ -1,9 +1,9 @@
 import type { Gender } from '../types/main';
-import { DEFAULT_POPULATION_MEDIAN_AGE } from './lifeSpent';
+import { DEFAULT_POPULATION_MEDIAN_AGE } from './constant';
 
 /**
  * URL query parameters for sharing life calculation results.
- * Format: ?birth=YYYYMMDD&gender=male|female&life-expectancy=77&median-pop-age=39.6
+ * Format: ?birth=YYYYMMDD&gender=male|female&life-expectancy=77&median-pop-age=31.1
  */
 export interface ShareParams {
   birth: string; // Format: YYYYMMDD (e.g., "19961228")

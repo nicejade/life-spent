@@ -49,7 +49,7 @@ export default {
     }
   },
   plugins: [
-    function ({ addVariant }) {
+    function ({ addVariant }: { addVariant: (name: string, selector: string) => void }) {
       addVariant('light', '.light &');
     }
   ]

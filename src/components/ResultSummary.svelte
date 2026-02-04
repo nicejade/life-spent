@@ -62,11 +62,11 @@
     <p class="relative text-xs md:text-sm uppercase tracking-[0.4em] text-paper-200/70 mb-2 light:text-ink-500">
       相对年龄位置
     </p>
+    <p class="relative text-xs text-neutral-500 mt-3 tracking-widest light:text-neutral-600">
+      比多少比例的人年纪大？
+    </p>
     <p class="relative text-6xl md:text-8xl font-light text-paper-50 tracking-tight light:text-ink-950">
       {relativePercentDisplay}<span class="text-3xl md:text-4xl">%</span>
-    </p>
-    <p class="relative text-xs text-neutral-500 mt-3 tracking-widest light:text-neutral-600">
-      比你年龄大的人群比例
     </p>
   </div>
 
@@ -174,7 +174,7 @@
       <dd class="font-medium text-paper-50 light:text-ink-950">{result.lifeExpectancy} 岁</dd>
     </div>
     <div class="flex flex-col">
-      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">预计剩余</dt>
+      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">预计剩余岁月</dt>
       <dd class="font-medium text-paper-50 light:text-ink-950">{formatAge(result.yearsRemaining)}</dd>
     </div>
     <div class="flex flex-col">
@@ -182,7 +182,7 @@
       <dd class="font-medium text-paper-50 light:text-ink-950">{result.populationMedianAge} 岁</dd>
     </div>
     <div class="flex flex-col">
-      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">相对年龄位置</dt>
+      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">超中位数比例</dt>
       <dd class="font-medium text-paper-50 light:text-ink-950">{relativePercentDisplay}%</dd>
     </div>
   </dl>

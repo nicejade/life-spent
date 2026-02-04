@@ -5,6 +5,7 @@
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import Header from './components/Header.svelte';
+  import { DEFAULT_LIFE_EXPECTANCY } from './helper/constant'
   import type { Gender, LifeCalculation } from './types/main';
 
   let result: LifeCalculation | null = null;
@@ -79,7 +80,7 @@
             平均预期寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。
           </p>
           <div class="text-[0.75rem] text-neutral-400/80 light:text-neutral-500 tracking-[0.3em] uppercase">
-            男 73 · 女 79
+            男 {DEFAULT_LIFE_EXPECTANCY.male} · 女 {DEFAULT_LIFE_EXPECTANCY.female}
           </div>
           <div class="h-px bg-white/10 light:bg-black/10" />
           <p class="text-xs text-neutral-400 light:text-neutral-600">

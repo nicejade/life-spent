@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, validateBirthDate } from '../helper/lifeSpent';
+  import { validateBirthDate } from '../helper/lifeSpent';
   import CustomSelect from './Select.svelte';
   import { 
     STORAGE_KEY,
@@ -9,8 +9,10 @@
     DEFAULT_BIRTH_DAY,
     POPULATION_MEDIAN_AGE_MIN,
     POPULATION_MEDIAN_AGE_MAX,
+    DEFAULT_POPULATION_MEDIAN_AGE,
     LIFE_EXPECTANCY_MIN,
-    LIFE_EXPECTANCY_MAX
+    LIFE_EXPECTANCY_MAX,
+    DEFAULT_LIFE_EXPECTANCY,
   } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
 
@@ -261,7 +263,7 @@
         出生日期
       </p>
       <div
-        class="grid grid-cols-3 gap-3"
+        class="grid grid-cols-1 sm:grid-cols-3 gap-3"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
       >
@@ -331,33 +333,30 @@
       </div>
     </fieldset>
 
-    <div class="flex flex-row items-center justify-around">
-      <div class="space-y-2">
-      <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
-        平均预期寿命
-      </p>
-      <div class="flex items-center gap-2">
-        <input
-          type="text"
-          inputmode="decimal"
-          pattern={NUMERIC_PATTERN}
-          value={lifeExpectancyInput}
-          on:input={handleLifeExpectancyInput}
-          class="w-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
-                 text-paper-50 text-center transition-all
-                 focus:border-paper-200/70 focus:outline-none focus:bg-white/10
-                 light:bg-black/5 light:border-black/10 light:text-ink-950
-                 light:focus:border-black/20 light:focus:bg-black/10"
-          aria-label="平均预期寿命（可输入小数）"
-        />
-        <span class="text-neutral-400 light:text-neutral-600">岁</span>
-      </div>
-      <p class="text-xs text-neutral-500 light:text-neutral-600">
-        不同国家和地区的预期寿命存在差异，可根据实际情况调整
-      </p>
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="w-full md:w-auto space-y-2">
+        <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
+          平均预期寿命
+        </p>
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            inputmode="decimal"
+            pattern={NUMERIC_PATTERN}
+            value={lifeExpectancyInput}
+            on:input={handleLifeExpectancyInput}
+            class="md:w-32 w-56 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+                  text-paper-50 text-center transition-all
+                  focus:border-paper-200/70 focus:outline-none focus:bg-white/10
+                  light:bg-black/5 light:border-black/10 light:text-ink-950
+                  light:focus:border-black/20 light:focus:bg-black/10"
+            aria-label="平均预期寿命（可输入小数）"
+          />
+          <span class="text-neutral-400 light:text-neutral-600">岁</span>
+        </div>
       </div>
 
-      <div class="space-y-2">
+      <div class="w-full md:w-auto space-y-2">
         <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
           人口中位年龄
         </p>
@@ -368,7 +367,7 @@
             pattern={NUMERIC_PATTERN}
             value={populationMedianAgeInput}
             on:input={handlePopulationMedianAgeInput}
-            class="w-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
+            class="md:w-32 w-56 px-4 py-3 bg-white/5 border border-white/10 rounded-xl
                   text-paper-50 text-center transition-all
                   focus:border-paper-200/70 focus:outline-none focus:bg-white/10
                   light:bg-black/5 light:border-black/10 light:text-ink-950
@@ -377,11 +376,11 @@
           />
           <span class="text-neutral-400 light:text-neutral-600">岁</span>
         </div>
-        <p class="text-xs text-neutral-500 light:text-neutral-600">
-          可根据实际情况调整
-        </p>
       </div>
     </div>
+    <p class="text-xs text-neutral-500 light:text-neutral-600">
+      不同国家和地区的预期寿命存在差异，可根据实际情况调整
+    </p>
 
     {#if error}
       <div
@@ -405,7 +404,7 @@
     </button>
   </form>
 
-  <p class="text-xs text-neutral-500 light:text-neutral-600 mt-1 text-center">
-    默认参考值：平均预期寿命 男性 73 岁，女性 79 岁 · 人口中位年龄 39.6 岁
+  <p class="text-xs text-neutral-500 light:text-neutral-600 mt-1 text-left">
+    默认参考值：平均预期寿命 男性 73 岁，女性 79 岁 · 人口中位年龄 {DEFAULT_POPULATION_MEDIAN_AGE} 岁
   </p>
 </div>
