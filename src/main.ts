@@ -1,3 +1,4 @@
+import 'virtual:svg-icons-register';
 import './styles/tailwind.css';
 import App from './App.svelte';
 

@@ -206,7 +206,7 @@
 
   <div class="bg-paper-100/10 border border-paper-200/20 rounded-xl p-4 text-sm text-neutral-300 leading-relaxed space-y-2 light:bg-black/5 light:border-black/10 light:text-neutral-700">
     <p>平均预期寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。</p>
-    <p class="text-paper-100/90 font-medium light:text-ink-950">若你已接近人群中位年龄，那道「还年轻」的门槛早已在身后。</p>
+    <p class="text-paper-100/90 font-black light:text-ink-950">若你已接近人群中位年龄，那道「还年轻」的门槛早已在身后。</p>
   </div>
 
   <div class="flex gap-3">

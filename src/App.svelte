@@ -2,17 +2,12 @@
   import { onMount } from 'svelte';
   import { calculateLifePercent } from './helper/lifeSpent';
   import { parseShareParams, birthStringToDate } from './helper/urlParams';
-  import { theme } from './helper/theme';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
-  import SvgIcon from './components/SvgIcon.svelte';
+  import Header from './components/Header.svelte';
   import type { Gender, LifeCalculation } from './types/main';
 
   let result: LifeCalculation | null = null;
-
-  function toggleTheme() {
-    theme.update(t => t === 'dark' ? 'light' : 'dark');
-  }
 
   // Check for share parameters on mount
   onMount(() => {
@@ -53,33 +48,20 @@
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_55%)] light:bg-[radial-gradient(circle_at_top,_rgba(15,15,15,0.08),_transparent_55%)]" />
   </div>
 
-  <div class="relative z-10 container mx-auto px-4 py-12 lg:py-16 space-y-10">
-    <div class="flex items-center justify-between md:justify-start md:space-x-6">
-      <header class="flex-1 max-w-4xl space-y-3 text-center md:text-left">
-        <p class="text-xs uppercase tracking-[0.5em] text-paper-200/70 light:text-ink-500">
-          LifeSpent · 反思之旅
-        </p>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
-          透过数据，与生命的流逝保持恰到好处的距离
-        </h1>
-        <p class="text-base md:text-lg text-neutral-300 light:text-neutral-700 max-w-3xl">
-          以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
-        </p>
-      </header>
+  <Header />
 
-      <button
-        on:click={toggleTheme}
-        class="theme-toggle p-3 rounded-xl transition-all duration-300 cursor-pointer text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10"
-        aria-label="切换主题"
-        title="切换主题"
-      >
-        {#if $theme === 'dark'}
-          <SvgIcon name="sun" width={20} height={20} color="currentColor" />
-        {:else}
-          <SvgIcon name="moon" width={20} height={20} color="currentColor" />
-        {/if}
-      </button>
-    </div>
+  <div class="relative z-10 container mx-auto px-4 py-10 lg:py-14 space-y-10">
+    <header class="max-w-4xl space-y-3 text-center md:text-left">
+      <p class="text-xs uppercase tracking-[0.5em] text-paper-200/70 light:text-gray-600">
+        LifeSpent · 反思之旅
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
+        透过数据，与生命的流逝保持恰到好处的距离
+      </h1>
+      <p class="text-base md:text-lg text-neutral-300 light:text-neutral-700 max-w-3xl">
+        以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
+      </p>
+    </header>
 
     <section class="flex flex-col gap-8 xl:flex-row xl:items-start">
       <div class="flex-1">
