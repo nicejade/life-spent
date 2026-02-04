@@ -15,6 +15,7 @@
     DEFAULT_LIFE_EXPECTANCY,
   } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
+  import { trackEvent, GA_EVENTS } from '../helper/ga';
 
   interface StoredSettings {
     selectedYear: string;
@@ -49,7 +50,7 @@
   function sanitizeNumericInput(value: string) {
     let cleaned = value.replace(/[^0-9.]/g, '');
     
-    // 限制只能有一个小数点
+    // Allow only one decimal point
     const parts = cleaned.split('.');
     if (parts.length > 2) {
       cleaned = parts[0] + '.' + parts.slice(1).join('');
@@ -77,7 +78,7 @@
     if (isNaN(parsed) || parsed < 0) {
       return DEFAULT_LIFE_EXPECTANCY[gender];
     }
-    // 限制在有效范围内
+    // Clamp to valid range
     return Math.max(LIFE_EXPECTANCY_MIN, Math.min(LIFE_EXPECTANCY_MAX, parsed));
   }
 
@@ -86,7 +87,7 @@
     if (isNaN(parsed) || parsed < 0) {
       return DEFAULT_POPULATION_MEDIAN_AGE;
     }
-    // 限制在有效范围内
+    // Clamp to valid range
     return Math.max(POPULATION_MEDIAN_AGE_MIN, Math.min(POPULATION_MEDIAN_AGE_MAX, parsed));
   }
 
@@ -175,7 +176,7 @@
 
   let error = '';
 
-  // 根据性别设置默认平均预期寿命输入值
+  // Update default life expectancy based on gender
   $: if (gender === 'male' && lifeExpectancyInput === String(LIFE_EXPECTANCY_DEFAULT_FEMALE)) {
     lifeExpectancyInput = String(LIFE_EXPECTANCY_DEFAULT_MALE);
   } else if (gender === 'female' && lifeExpectancyInput === String(LIFE_EXPECTANCY_DEFAULT_MALE)) {
@@ -193,14 +194,30 @@
 
   function handleYearSelect(e: CustomEvent<SelectItem>) {
     selectedYear = e.detail?.value ?? selectedYear;
+    trackEvent(GA_EVENTS.SELECT_YEAR, {
+      value: selectedYear,
+    });
   }
 
   function handleMonthSelect(e: CustomEvent<SelectItem>) {
     selectedMonth = e.detail?.value ?? selectedMonth;
+    trackEvent(GA_EVENTS.SELECT_MONTH, {
+      value: selectedMonth,
+    });
   }
 
   function handleDaySelect(e: CustomEvent<SelectItem>) {
     selectedDay = e.detail?.value ?? selectedDay;
+    trackEvent(GA_EVENTS.SELECT_DAY, {
+      value: selectedDay,
+    });
+  }
+
+  function handleGenderChange(newGender: Gender) {
+    gender = newGender;
+    trackEvent(GA_EVENTS.SELECT_GENDER, {
+      gender: newGender,
+    });
   }
 
   function handleSubmit() {
@@ -226,7 +243,7 @@
     const lifeExpectancy = getLifeExpectancy();
     const populationMedianAge = getPopulationMedianAge();
 
-    // 验证输入值是否在有效范围内
+    // Validate input values are within valid range
     const lifeExpectancyValue = parseFloat(lifeExpectancyInput);
     if (!isNaN(lifeExpectancyValue)) {
       if (lifeExpectancyValue < LIFE_EXPECTANCY_MIN || lifeExpectancyValue > LIFE_EXPECTANCY_MAX) {
@@ -242,6 +259,14 @@
         return;
       }
     }
+
+    // Track calculate event
+    trackEvent(GA_EVENTS.SUBMIT_CALCULATE, {
+      birth_date: birthDateStr,
+      gender: gender,
+      life_expectancy: lifeExpectancy,
+      population_median_age: populationMedianAge,
+    });
 
     onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge);
   }
@@ -304,6 +329,7 @@
             bind:group={gender}
             class="sr-only peer"
             aria-label="男性"
+            on:change={() => handleGenderChange('male')}
           />
           <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
                       text-center transition-all peer-checked:border-paper-200/60 
@@ -321,6 +347,7 @@
             bind:group={gender}
             class="sr-only peer"
             aria-label="女性"
+            on:change={() => handleGenderChange('female')}
           />
           <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
                       text-center transition-all peer-checked:border-paper-200/60 

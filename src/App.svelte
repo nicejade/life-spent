@@ -7,11 +7,18 @@
   import Header from './components/Header.svelte';
   import { DEFAULT_LIFE_EXPECTANCY } from './helper/constant'
   import type { Gender, LifeCalculation } from './types/main';
+  import { trackEvent, GA_EVENTS } from './helper/ga';
 
   let result: LifeCalculation | null = null;
 
   // Check for share parameters on mount
   onMount(() => {
+    // Track page view on load
+    trackEvent(GA_EVENTS.PAGE_VIEW, {
+      page: 'home',
+      timestamp: new Date().toISOString(),
+    });
+
     const shareParams = parseShareParams();
     if (shareParams) {
       const birthDate = birthStringToDate(shareParams.birth);

@@ -6,6 +6,7 @@
   import ImpactHeartbeatStrip from './impact/ImpactHeartbeatStrip.svelte';
   import ImpactGridAges from './impact/ImpactGridAges.svelte';
   import type { LifeCalculation } from '../types/main';
+  import { trackEvent, GA_EVENTS } from '../helper/ga';
 
   export let result: LifeCalculation;
   export let onReset: () => void;
@@ -42,16 +43,32 @@
   });
 
   async function handleShare() {
+    trackEvent(GA_EVENTS.SHARE_CLICK);
     const success = await copyShareUrl(shareUrl);
     if (success) {
       copySuccess = true;
-      // Clear previous timeout if exists
       if (copyTimeout) clearTimeout(copyTimeout);
-      // Reset success message after 2 seconds
       copyTimeout = setTimeout(() => {
         copySuccess = false;
       }, 2000);
+      trackEvent(GA_EVENTS.SHARE_COPY);
     }
+  }
+
+  function handleViewChange(view: ImpactView) {
+    impactView = view;
+    const eventMap: Record<ImpactView, string> = {
+      grid: GA_EVENTS.VIEW_GRID,
+      strata: GA_EVENTS.VIEW_STRATA,
+      weeks: GA_EVENTS.VIEW_WEEKS,
+      heartbeat: GA_EVENTS.VIEW_HEARTBEAT,
+    };
+    trackEvent(eventMap[view], { view });
+  }
+
+  function handleResetClick() {
+    trackEvent(GA_EVENTS.RESET_CALCULATE);
+    onReset();
   }
 </script>
 
@@ -103,7 +120,7 @@
         class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'grid'
           ? 'bg-white/10 border-white/20 text-paper-100 light:bg-black/10 light:border-black/20 light:text-ink-950'
           : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:text-paper-100 light:bg-black/5 light:border-black/10 light:text-neutral-600 light:hover:border-black/20 light:hover:text-ink-950'}"
-        on:click={() => (impactView = 'grid')}
+        on:click={() => handleViewChange('grid')}
       >
         年龄格
       </button>
@@ -116,7 +133,7 @@
         class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'strata'
           ? 'bg-white/10 border-white/20 text-paper-100 light:bg-black/10 light:border-black/20 light:text-ink-950'
           : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:text-paper-100 light:bg-black/5 light:border-black/10 light:text-neutral-600 light:hover:border-black/20 light:hover:text-ink-950'}"
-        on:click={() => (impactView = 'strata')}
+        on:click={() => handleViewChange('strata')}
       >
         时间层
       </button>
@@ -129,7 +146,7 @@
         class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'weeks'
           ? 'bg-white/10 border-white/20 text-paper-100 light:bg-black/10 light:border-black/20 light:text-ink-950'
           : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:text-paper-100 light:bg-black/5 light:border-black/10 light:text-neutral-600 light:hover:border-black/20 light:hover:text-ink-950'}"
-        on:click={() => (impactView = 'weeks')}
+        on:click={() => handleViewChange('weeks')}
       >
         周历墙
       </button>
@@ -142,7 +159,7 @@
         class="px-3 py-2 text-xs uppercase tracking-[0.3em] rounded-lg border transition-colors cursor-pointer {impactView === 'heartbeat'
           ? 'bg-white/10 border-white/20 text-paper-100 light:bg-black/10 light:border-black/20 light:text-ink-950'
           : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:text-paper-100 light:bg-black/5 light:border-black/10 light:text-neutral-600 light:hover:border-black/20 light:hover:text-ink-950'}"
-        on:click={() => (impactView = 'heartbeat')}
+        on:click={() => handleViewChange('heartbeat')}
       >
         节拍刻度
       </button>
@@ -225,7 +242,7 @@
       {/if}
     </button>
     <button
-      on:click={onReset}
+      on:click={handleResetClick}
       class="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
              text-neutral-200 rounded-xl transition-all cursor-pointer
              light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700"
