@@ -1,16 +1,26 @@
 # LifeSpent
 
+[![License](https://img.shields.io/github/license/nicejade/life-spent?style=flat-square)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-live-10b981?style=flat-square)](https://spent.lovejade.cn/)
+[![Stars](https://img.shields.io/github/stars/nicejade/life-spent?style=flat-square)](https://github.com/nicejade/life-spent/stargazers)
+[![Issues](https://img.shields.io/github/issues/nicejade/life-spent?style=flat-square)](https://github.com/nicejade/life-spent/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/nicejade/life-spent?style=flat-square)](https://github.com/nicejade/life-spent/commits/main)
+
 > A quiet reflection on time. No judgment, just math.
 
-**LifeSpent** is a minimalist web application designed to show you exactly how much of your life has already passed, based on your age and your country’s median life expectancy. It is built to break the illusion of "infinite youth" and encourage a calm, intentional approach to the time we have left.
+**LifeSpent** is a minimalist web application designed to show you exactly how much of your life has already passed, based on your age, average life expectancy, and population median age. It is built to break the illusion of "infinite youth" and encourage a calm, intentional approach to the time we have left.
 
----
+## ✨ Key Notes
+
+- **Defaults**: Average life expectancy is 75.37 for men and 80.88 for women; global population median age is 31.1 (modifiable in code).
+- **Tone**: Calm, reflective, and restrained — no motivation, no judgment.
+- **Privacy**: No accounts, no tracking, just math.
 
 ## 🕊️ Philosophy
 
 LifeSpent is not a motivational tool, nor is it a memento mori designed to evoke fear. It is a mirror held up to time.
 
-- **Objective Reality**: We use real actuarial data (median age: 73 for men, 79 for women by default).
+- **Objective Reality**: We use real actuarial data (average life expectancy: 75.37 for men, 80.88 for women; global population median age: 31.1 by default).
 - **Ceremonial Design**: A dark, modern interface that prioritizes clarity and reflection.
 - **Zero Friction**: No accounts, no tracking, just the numbers.
 
@@ -47,18 +57,25 @@ npm run dev
 npm run build
 ```
 
+## 🔗 Live Demo
+
+[https://spent.lovejade.cn/](https://spent.lovejade.cn/)
+
+## 🌐 Access
+
+- **Local Development**: Run `npm run dev` and open `http://localhost:5173`.
+- **Production Build**: Run `npm run build`, then deploy `dist/` to your static host.
+- **Hosting Options**: Any static host works (Vercel, Netlify, GitHub Pages, etc.).
+
 ## 📂 Project Structure
 
 ```bash
 src/
-├── lib/               # Core logic and types
-│   ├── types.ts       # Shared TypeScript interfaces
-│   └── lifeSpent.ts   # Pure calculation utilities
+├── helper/            # Core logic, constants, and utilities
+├── types/             # TypeScript type definitions
 ├── components/        # Svelte UI components
-│   ├── InputPanel.svelte
-│   └── ResultSummary.svelte
+├── assets/icons/      # SVG icons (check, github, moon, selector, sun)
 ├── styles/            # Minimal global styles
-│   └── tailwind.css
 ├── App.svelte         # Main application entry
 └── main.ts            # Bootstrapping
 ```
@@ -70,6 +87,22 @@ src/
 - **Accessibility**: Semantic HTML and full ARIA support by default.
 - **Responsive**: Mobile-first design for reflection on the go.
 
+## 🤝 Contributing
+
+We welcome thoughtful, minimal contributions that respect the product's reflective tone.
+
+- **Open an issue first** for substantial changes to confirm direction.
+- **Fork and branch** off `main`, then submit a focused PR.
+- **Keep logic in `lib/`** and UI in `src/` components.
+- **Add tests where logic changes** (test setup may be minimal, but leave test-ready structure).
+- **Follow the existing style**: Tailwind utilities, minimal custom CSS.
+
+## 📜 License
+
+MIT. See `LICENSE`.
+
 ---
 
 Built with care to remind us that every second counts.
+
+Copyright (c) 2026-present, [nicejade](https://www.lovejade.cn/).
