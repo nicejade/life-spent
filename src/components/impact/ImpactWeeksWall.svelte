@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ImpactData } from '../../helper/lifeSpent';
+  import { t, formatString } from '../../helper/i18n';
 
   export let data: ImpactData;
 
@@ -7,11 +8,14 @@
   const DENSE_STEP = 4;
   $: totalDense = Math.ceil(data.totalWeeks / DENSE_STEP);
   $: spentDense = Math.ceil(data.weeksSpent / DENSE_STEP);
+  $: ariaLabelTemplate = $t.impact.weeksWall.ariaLabel;
+  $: weekRangeTemplate = $t.impact.weeksWall.weekRange;
+  $: summaryTemplate = $t.impact.weeksWall.summary;
 </script>
 
-<div class="space-y-3" role="img" aria-label="生命周历：已度过 {data.weeksSpent} 周，共 {data.totalWeeks} 周">
+<div class="space-y-3" role="img" aria-label={formatString(ariaLabelTemplate, { spent: String(data.weeksSpent), total: String(data.totalWeeks) })}>
   <p class="text-xs uppercase tracking-[0.4em] text-neutral-500 light:text-neutral-600">
-    周历墙 · 每一格是一周
+    {$t.impact.weeksWall.title}
   </p>
   <div class="flex flex-wrap gap-0.5 max-h-[280px] overflow-y-auto overflow-x-hidden">
     <!-- Dense view: one cell per DENSE_STEP weeks for performance -->
@@ -21,11 +25,11 @@
         class="w-2 h-2 rounded-sm transition-colors duration-300 {filled
           ? 'bg-paper-100/90 light:bg-ink-950'
           : 'bg-white/5 border border-white/10 light:bg-black/5 light:border-black/10'}"
-        title="{i * DENSE_STEP}–{Math.min((i + 1) * DENSE_STEP, data.totalWeeks)} 周"
+        title={formatString(weekRangeTemplate, { start: String(i * DENSE_STEP), end: String(Math.min((i + 1) * DENSE_STEP, data.totalWeeks)) })}
       />
     {/each}
   </div>
   <p class="text-[0.65rem] uppercase tracking-[0.3em] text-neutral-500 light:text-neutral-600">
-    已过 {data.weeksSpent} 周 / 共 {data.totalWeeks} 周（以平均预期寿命计）
+    {formatString(summaryTemplate, { spent: String(data.weeksSpent), total: String(data.totalWeeks) })}
   </p>
 </div>

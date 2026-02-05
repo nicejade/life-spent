@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t, formatString } from '../helper/i18n';
+
   interface SocialLink {
     href: string;
     img: string;
@@ -8,23 +10,22 @@
   const socialLinks: SocialLink[] = [
     { href: 'https://github.com/nicejade', img: 'github', alt: 'Github' },
     { href: 'https://x.com/MarshalXuan', img: 'x', alt: 'X | Twitter' },
-    { href: 'https://www.facebook.com/nice.jade.yang/', img: 'facebook', alt: 'Facebook | 脸书' },
+    { href: 'https://www.facebook.com/nice.jade.yang/', img: 'facebook', alt: 'Facebook' },
     { href: 'https://www.threads.com/@turingmind', img: 'threads', alt: 'Threads' },
-    { href: 'https://www.youtube.com/@MarshalXuan', img: 'youtube', alt: 'YouTube | 油管' },
-    { href: 'https://space.bilibili.com/690989854', img: 'bilibili', alt: 'Bilibili | 哔哩哔哩' },
-    { href: 'https://mastodon.social/@nicejade', img: 'mastodon', alt: 'Mastodon | 长毛象' },
-    { href: 'https://www.jeffjade.com/', img: 'blogger', alt: 'Blog | 博客' },
+    { href: 'https://www.youtube.com/@MarshalXuan', img: 'youtube', alt: 'YouTube' },
+    { href: 'https://space.bilibili.com/690989854', img: 'bilibili', alt: 'Bilibili' },
+    { href: 'https://mastodon.social/@nicejade', img: 'mastodon', alt: 'Mastodon' },
+    { href: 'https://www.jeffjade.com/', img: 'blogger', alt: 'Blog' },
   ];
 
   const currentYear = new Date().getFullYear();
 
   const brandTitle = 'LifeSpent';
-  const brandDesc = 'A quiet reflection on time. No judgment, just math.';
 </script>
 
 <footer
   class="relative z-10 border-t border-white/[0.08] light:border-black/10 mt-16"
-  aria-label="页脚"
+  aria-label="Footer"
 >
   <div class="container mx-auto px-4 py-8 md:py-10">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-0">
@@ -50,7 +51,7 @@
           </span>
         </div>
         <p class="text-sm text-neutral-400 light:text-neutral-600 pl-[3.25rem] leading-relaxed">
-          {brandDesc}
+          {$t.footer.brandDesc}
         </p>
       </section>
 
@@ -59,7 +60,7 @@
           id="footer-social-heading"
           class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500 mb-4"
         >
-          Social | Follow us
+          {$t.footer.socialTitle}
         </h2>
         <ul class="flex flex-wrap gap-2 md:justify-end justify-start" role="list">
         {#each socialLinks as link}
@@ -90,10 +91,10 @@
       class="mt-8 pt-6 border-t border-white/[0.06] light:border-black/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
     >
       <p class="text-sm text-neutral-400 light:text-neutral-600">
-        LifeSpent · 珍惜此刻
+        {$t.footer.tagline}
       </p>
       <p class="text-sm text-neutral-500 light:text-neutral-500 font-medium tracking-wide">
-          © {currentYear} <a href="https://www.lovejade.cn/" class="text-[var(--sl-color-gray-3)] px-2 py-1 rounded-md transition-all hover:bg-white/[0.1] bg-white/[0.1] [:root[data-theme='light']_&]:hover:bg-black/[0.06] hover:text-[var(--sl-color-text-accent)] decoration-none no-underline border-none">lovejade.cn</a> · 保留所有权利
+          {formatString($t.footer.copyright, { year: String(currentYear) })} <a href="https://www.lovejade.cn/" class="text-[var(--sl-color-gray-3)] px-2 py-1 rounded-md transition-all hover:bg-white/[0.1] bg-white/[0.1] [:root[data-theme='light']_&]:hover:bg-black/[0.06] hover:text-[var(--sl-color-text-accent)] decoration-none no-underline border-none">lovejade.cn</a> · {$t.footer.allRightsReserved}
       </p>
     </div>
   </div>

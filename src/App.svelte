@@ -9,11 +9,76 @@
   import { DEFAULT_LIFE_EXPECTANCY } from './helper/constant'
   import type { Gender, LifeCalculation } from './types/main';
   import { trackEvent, GA_EVENTS } from './helper/ga';
+  import { locale, getLocaleFromPath, getPathWithoutLocale, getLocalizedPath, SUPPORTED_LOCALES, t, formatString } from './helper/i18n';
+  import { get } from 'svelte/store';
 
   let result: LifeCalculation | null = null;
 
   // Check for share parameters on mount
   onMount(() => {
+    // Handle locale from URL path
+    const pathLocale = getLocaleFromPath(window.location.pathname);
+    if (pathLocale) {
+      locale.set(pathLocale);
+    } else {
+      // If no locale in path, redirect to localized path
+      const currentPath = getPathWithoutLocale(window.location.pathname);
+      const localizedPath = getLocalizedPath(currentPath);
+      if (localizedPath !== window.location.pathname) {
+        window.history.replaceState({}, '', localizedPath);
+      }
+    }
+
+    // Update document lang attribute and meta tags
+    locale.subscribe((loc) => {
+      document.documentElement.lang = loc === 'zh-TW' ? 'zh-Hant' : loc === 'zh' ? 'zh-Hans' : loc;
+      
+      // Update meta tags
+      const translations = get(t);
+      const title = `LifeSpent — ${translations.app.title}`;
+      const description = translations.app.subtitle;
+      
+      document.title = title;
+      
+      // Update meta description
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.setAttribute('name', 'description');
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.setAttribute('content', description);
+      
+      // Update OG tags
+      const updateMeta = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+      
+      updateMeta('og:title', title);
+      updateMeta('og:description', description);
+      updateMeta('og:locale', loc === 'zh-TW' ? 'zh_TW' : loc === 'zh' ? 'zh_CN' : loc.replace('-', '_'));
+      
+      // Update Twitter tags
+      const updateTwitterMeta = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="twitter:${name}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', `twitter:${name}`);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+      
+      updateTwitterMeta('title', title);
+      updateTwitterMeta('description', description);
+    });
+
     // Track page view on load
     trackEvent(GA_EVENTS.PAGE_VIEW, {
       page: 'home',
@@ -62,13 +127,13 @@
   <div class="relative z-10 container mx-auto px-4 py-10 lg:py-14 space-y-10">
     <header class="max-w-4xl space-y-3 text-center md:text-left">
       <p class="text-xs uppercase tracking-[0.5em] text-paper-200/70 light:text-gray-600">
-        LifeSpent · 反思之旅
+        {$t.app.tagline}
       </p>
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
-        透过数据，与生命的流逝保持恰到好处的距离
+        {$t.app.title}
       </h1>
       <p class="text-base md:text-lg text-neutral-300 light:text-neutral-700 max-w-3xl">
-        以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。
+        {$t.app.subtitle}
       </p>
     </header>
 
@@ -83,26 +148,26 @@
 
       <aside class="xl:w-72 space-y-4 flex-shrink-0">
         <div class="glass-card rounded-2xl p-6 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">提醒</p>
+          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">{$t.app.reminder.title}</p>
           <p class="text-sm text-neutral-200 light:text-neutral-700 leading-relaxed">
-            平均预期寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。
+            {$t.app.reminder.content}
           </p>
           <div class="text-[0.75rem] text-neutral-400/80 light:text-neutral-500 tracking-[0.3em] uppercase">
-            男 {DEFAULT_LIFE_EXPECTANCY.male} · 女 {DEFAULT_LIFE_EXPECTANCY.female}
+            {formatString($t.app.reminder.defaults, { male: DEFAULT_LIFE_EXPECTANCY.male, female: DEFAULT_LIFE_EXPECTANCY.female })}
           </div>
           <div class="h-px bg-white/10 light:bg-black/10" />
           <p class="text-xs text-neutral-400 light:text-neutral-600">
-            如有需要，可在输入面板中自定义平均预期寿命与人群中位年龄参考值。
+            {$t.app.reminder.note}
           </p>
         </div>
 
         <div class="glass-card rounded-2xl p-6 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">珍惜</p>
+          <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500">{$t.app.cherish.title}</p>
           <p class="text-sm text-neutral-200 light:text-neutral-700 leading-relaxed">
-            时间是最公平的礼物，每一秒都不可复制。与其焦虑未来，不如专注当下。
+            {$t.app.cherish.content}
           </p>
           <p class="text-sm text-paper-100 light:text-ink-900">
-            珍惜此刻，就是珍惜生命本身。
+            {$t.app.cherish.conclusion}
           </p>
         </div>
       </aside>

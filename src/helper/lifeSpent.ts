@@ -1,5 +1,7 @@
 import type { BirthInfo, LifeCalculation } from '../types/main'
 import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, MAX_HUMAN_AGE } from './constant'
+import { get } from 'svelte/store'
+import { locale, LOCALE_TO_INTL, t } from './i18n'
 
 /** Strata bounds (years): 0–20, 20–40, 40–60, 60–life expectancy. */
 export const STRATA_BOUNDS = [0, 20, 40, 60] as const;
@@ -20,19 +22,25 @@ export interface ImpactData {
   gridBands: { startAge: number; endAge: number; sizePx: number; cellsSpent: number; cellsTotal: number }[];
 }
 
-export function getImpactData(result: LifeCalculation): ImpactData {
+export function getImpactData(result: LifeCalculation, translations?: any): ImpactData {
   const { currentAge, lifeExpectancy } = result;
   const totalYears = currentAge >= lifeExpectancy ? MAX_HUMAN_AGE : lifeExpectancy;
   const totalWeeks = Math.round(totalYears * 52);
   const weeksSpent = Math.min(Math.round(currentAge * 52), totalWeeks);
 
+  const currentTranslations = translations || get(t);
+  const ageRangeTemplate = currentTranslations.common.ageRange;
+
   const strata: ImpactData['strata'] = STRATA_BOUNDS.map((start, i) => {
     const end = i === STRATA_BOUNDS.length - 1 ? lifeExpectancy : STRATA_BOUNDS[i + 1];
     const spent = currentAge >= end;
+    const label = ageRangeTemplate
+      .replace('{start}', String(start))
+      .replace('{end}', String(end));
     return {
       start,
       end,
-      label: `${start}–${end} 岁`,
+      label,
       spent
     };
   });
@@ -95,13 +103,24 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
 }
 
 export function formatAge(age: number): string {
+  const currentLocale = get(locale);
+  const translations = get(t);
   const years = Math.floor(age);
-  const months = Math.floor((age - years) * 12);
-  return months > 0 ? `${years} 年 ${months} 个月` : `${years} 年`;
+  const yearsOldText = translations.common.yearsOld;
+  return `${years} ${yearsOldText}`;
 }
 
 export function formatDate(date: Date): string {
-  return date.toLocaleDateString('zh-CN', {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year} / ${month} / ${day}`;
+}
+
+export function formatDateLong(date: Date): string {
+  const currentLocale = get(locale);
+  const intlLocale = LOCALE_TO_INTL[currentLocale];
+  return date.toLocaleDateString(intlLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'

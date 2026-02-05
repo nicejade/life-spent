@@ -16,6 +16,7 @@
   } from '../helper/constant';
   import type { Gender, SelectItem } from '../types/main';
   import { trackEvent, GA_EVENTS } from '../helper/ga';
+  import { t, formatString, locale, LOCALE_TO_INTL } from '../helper/i18n';
 
   interface StoredSettings {
     selectedYear: string;
@@ -116,9 +117,16 @@
     }
   );
 
-  const monthOptions: SelectItem[] = Array.from({ length: 12 }, (_, i) => {
+  function getMonthName(month: number): string {
+    const currentLocale = $locale;
+    const intlLocale = LOCALE_TO_INTL[currentLocale];
+    const date = new Date(2000, month - 1, 1);
+    return date.toLocaleDateString(intlLocale, { month: 'long' });
+  }
+
+  $: monthOptions = Array.from({ length: 12 }, (_, i) => {
     const m = i + 1;
-    return { name: `${pad(m)} 月`, value: String(m) };
+    return { name: getMonthName(m), value: String(m) };
   });
 
   const LIFE_EXPECTANCY_DEFAULT_MALE = DEFAULT_LIFE_EXPECTANCY.male;
@@ -224,19 +232,19 @@
     error = '';
 
     if (!birthDateStr) {
-      error = '请输入出生日期';
+      error = $t.inputPanel.errors.enterBirthDate;
       return;
     }
 
     const birthDate = new Date(birthDateStr);
 
     if (isNaN(birthDate.getTime())) {
-      error = '日期格式无效';
+      error = $t.inputPanel.errors.invalidDate;
       return;
     }
 
     if (!validateBirthDate(birthDate)) {
-      error = '请输入有效的出生日期';
+      error = $t.inputPanel.errors.invalidBirthDate;
       return;
     }
 
@@ -247,7 +255,7 @@
     const lifeExpectancyValue = parseFloat(lifeExpectancyInput);
     if (!isNaN(lifeExpectancyValue)) {
       if (lifeExpectancyValue < LIFE_EXPECTANCY_MIN || lifeExpectancyValue > LIFE_EXPECTANCY_MAX) {
-        error = `平均预期寿命应在 ${LIFE_EXPECTANCY_MIN} 到 ${LIFE_EXPECTANCY_MAX} 岁之间`;
+        error = formatString($t.inputPanel.errors.lifeExpectancyRange, { min: String(LIFE_EXPECTANCY_MIN), max: String(LIFE_EXPECTANCY_MAX) });
         return;
       }
     }
@@ -255,7 +263,7 @@
     const medianAgeValue = parseFloat(populationMedianAgeInput);
     if (!isNaN(medianAgeValue)) {
       if (medianAgeValue < POPULATION_MEDIAN_AGE_MIN || medianAgeValue > POPULATION_MEDIAN_AGE_MAX) {
-        error = `人口中位年龄应在 ${POPULATION_MEDIAN_AGE_MIN} 到 ${POPULATION_MEDIAN_AGE_MAX} 岁之间`;
+        error = formatString($t.inputPanel.errors.medianAgeRange, { min: String(POPULATION_MEDIAN_AGE_MIN), max: String(POPULATION_MEDIAN_AGE_MAX) });
         return;
       }
     }
@@ -272,20 +280,20 @@
   }
 </script>
 
-<div class="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full space-y-6">
+<div class="glass-card rounded-2xl p-8 md:p-12 max-w-xl w-full space-y-6">
   <div class="space-y-2">
     <h1 class="text-3xl md:text-4xl font-light text-paper-50 light:text-ink-950">
-      人生已度过
+      {$t.inputPanel.title}
     </h1>
       <p class="text-sm text-neutral-400 light:text-neutral-600">
-      用数学告诉你时间的真相，静默但不沉闷。
+      {$t.inputPanel.subtitle}
       </p>
     </div>
 
   <form on:submit|preventDefault={handleSubmit} class="space-y-6">
     <div class="space-y-2" role="group" aria-labelledby="birthdate-label">
       <p id="birthdate-label" class="block text-sm font-medium text-neutral-300 light:text-neutral-700">
-        出生日期
+        {$t.inputPanel.birthDateLabel}
       </p>
       <div
         class="grid grid-cols-1 sm:grid-cols-3 gap-3"
@@ -295,21 +303,21 @@
         <CustomSelect
           options={yearOptions}
           active={yearActive}
-          label="年"
+          label={$t.inputPanel.year}
           listboxClass="w-full min-w-0"
           on:selected={handleYearSelect}
         />
         <CustomSelect
           options={monthOptions}
           active={monthActive}
-          label="月"
+          label={$t.inputPanel.month}
           listboxClass="w-full min-w-0"
           on:selected={handleMonthSelect}
         />
         <CustomSelect
           options={dayOptions}
           active={dayActive}
-          label="日"
+          label={$t.inputPanel.day}
           listboxClass="w-full min-w-0"
           on:selected={handleDaySelect}
         />
@@ -318,7 +326,7 @@
 
     <fieldset class="space-y-3 border-0 p-0">
       <legend class="text-sm font-medium text-neutral-300 light:text-neutral-700">
-        选择性别
+        {$t.inputPanel.selectGender}
       </legend>
       <div class="flex gap-4">
         <label class="flex-1 cursor-pointer">
@@ -328,7 +336,7 @@
             value="male"
             bind:group={gender}
             class="sr-only peer"
-            aria-label="男性"
+            aria-label={$t.inputPanel.male}
             on:change={() => handleGenderChange('male')}
           />
           <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
@@ -336,7 +344,7 @@
                       peer-checked:bg-white/10 peer-checked:text-paper-50
                       light:bg-black/5 light:border-black/10 light:text-ink-700
                       light:peer-checked:bg-black/10 light:peer-checked:text-ink-950">
-            男性
+            {$t.inputPanel.male}
           </div>
         </label>
         <label class="flex-1 cursor-pointer">
@@ -346,7 +354,7 @@
             value="female"
             bind:group={gender}
             class="sr-only peer"
-            aria-label="女性"
+            aria-label={$t.inputPanel.female}
             on:change={() => handleGenderChange('female')}
           />
           <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl
@@ -354,7 +362,7 @@
                       peer-checked:bg-white/10 peer-checked:text-paper-50
                       light:bg-black/5 light:border-black/10 light:text-ink-700
                       light:peer-checked:bg-black/10 light:peer-checked:text-ink-950">
-            女性
+            {$t.inputPanel.female}
           </div>
         </label>
       </div>
@@ -363,7 +371,7 @@
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
       <div class="w-full md:w-auto space-y-2">
         <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
-          平均预期寿命
+          {$t.inputPanel.lifeExpectancy}
         </p>
         <div class="flex items-center gap-2">
           <input
@@ -377,15 +385,15 @@
                   focus:border-paper-200/70 focus:outline-none focus:bg-white/10
                   light:bg-black/5 light:border-black/10 light:text-ink-950
                   light:focus:border-black/20 light:focus:bg-black/10"
-            aria-label="平均预期寿命（可输入小数）"
+            aria-label={$t.inputPanel.lifeExpectancy}
           />
-          <span class="text-neutral-400 light:text-neutral-600">岁</span>
+          <span class="text-neutral-400 light:text-neutral-600">{$t.inputPanel.yearsOld}</span>
         </div>
       </div>
 
       <div class="w-full md:w-auto space-y-2">
         <p class="text-sm font-medium text-neutral-300 light:text-neutral-700">
-          人口中位年龄
+          {$t.inputPanel.populationMedianAge}
         </p>
         <div class="flex items-center gap-2">
           <input
@@ -399,14 +407,14 @@
                   focus:border-paper-200/70 focus:outline-none focus:bg-white/10
                   light:bg-black/5 light:border-black/10 light:text-ink-950
                   light:focus:border-black/20 light:focus:bg-black/10"
-            aria-label="人口中位年龄（可输入小数）"
+            aria-label={$t.inputPanel.populationMedianAge}
           />
-          <span class="text-neutral-400 light:text-neutral-600">岁</span>
+          <span class="text-neutral-400 light:text-neutral-600">{$t.inputPanel.yearsOld}</span>
         </div>
       </div>
     </div>
     <p class="text-xs text-neutral-500 light:text-neutral-600">
-      不同国家和地区的预期寿命存在差异，可根据实际情况调整
+      {$t.inputPanel.customNote}
     </p>
 
     {#if error}
@@ -425,13 +433,13 @@
              hover:border-paper-200 text-ink-950 rounded-xl font-medium transition-all
              light:bg-ink-950 light:text-paper-50 light:border-ink-900 light:hover:bg-ink-900
              cursor-pointer active:scale-[0.98]"
-      aria-label="计算人生已度过的百分比"
+      aria-label={$t.inputPanel.submitButton}
     >
-      查看真相
+      {$t.inputPanel.submitButton}
     </button>
   </form>
 
   <p class="text-xs text-neutral-500 light:text-neutral-600 mt-1 text-left">
-    默认参考值：平均预期寿命 男性 73 岁，女性 79 岁 · 人口中位年龄 {DEFAULT_POPULATION_MEDIAN_AGE} 岁
+    {formatString($t.inputPanel.defaultNote, { male: String(DEFAULT_LIFE_EXPECTANCY.male), female: String(DEFAULT_LIFE_EXPECTANCY.female), median: String(DEFAULT_POPULATION_MEDIAN_AGE) })}
   </p>
 </div>
