@@ -30,11 +30,20 @@
   <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
     <a
       href="/"
-      class="text-lg font-medium tracking-tight text-paper-50 light:text-ink-950 hover:opacity-80 transition-opacity duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50 rounded-lg"
+      class="inline-flex items-center gap-2.5 text-paper-50 light:text-ink-950 hover:opacity-90 transition-opacity duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50 rounded-lg"
       aria-label="LifeSpent 首页"
       on:click={handleNavHome}
     >
-      LifeSpent
+      <img
+        src="/logo.svg"
+        alt=""
+        width="28"
+        height="28"
+        class="shrink-0 w-7 h-7 invert light:invert-0"
+      />
+      <strong class="font-display text-xl font-semibold tracking-tight">
+        LifeSpent
+      </strong>
     </a>
 
     <nav class="flex items-center gap-2" aria-label="应用操作">

@@ -14,7 +14,8 @@ export default {
           'Noto Sans CJK SC',
           'Source Han Sans SC',
           'sans-serif'
-        ]
+        ],
+        display: ['Cormorant', 'Georgia', 'serif']
       },
       colors: {
         ink: {
