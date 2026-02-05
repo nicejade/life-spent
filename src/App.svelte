@@ -5,6 +5,7 @@
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import Header from './components/Header.svelte';
+  import Footer from './components/Footer.svelte';
   import { DEFAULT_LIFE_EXPECTANCY } from './helper/constant'
   import type { Gender, LifeCalculation } from './types/main';
   import { trackEvent, GA_EVENTS } from './helper/ga';
@@ -106,9 +107,7 @@
         </div>
       </aside>
     </section>
-  </div>
 
-  <footer class="relative z-10 py-8 text-center text-xs text-neutral-500 light:text-neutral-600">
-    <p>仅作提醒，珍惜时间</p>
-  </footer>
+    <Footer />
+  </div>
 </main>
