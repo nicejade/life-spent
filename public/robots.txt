@@ -1,0 +1,5 @@
+# LifeSpent - https://spent.lovejade.cn/
+User-agent: *
+Allow: /
+
+Sitemap: https://spent.lovejade.cn/sitemap.xml
