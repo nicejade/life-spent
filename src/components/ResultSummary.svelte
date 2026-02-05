@@ -24,6 +24,8 @@
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
   $: impactData = getImpactData(result);
   $: relativePercentDisplay = result.relativeAgePercent.toFixed(1);
+  $: filledPercentColor = getHeatColor(filledPercent);
+  $: relativePercentColor = getHeatColor(Math.min(Math.max(result.relativeAgePercent, 0), 100));
   $: medianGap = result.yearsToMedianAge;
   $: medianGapLabel =
     medianGap >= 0
@@ -41,6 +43,32 @@
     lifeExpectancy: result.lifeExpectancy,
     populationMedianAge: result.populationMedianAge
   });
+
+  function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function lerp(a: number, b: number, t: number) {
+    return Math.round(a + (b - a) * t);
+  }
+
+  function mixRgb(from: [number, number, number], to: [number, number, number], t: number) {
+    const clamped = clamp(t, 0, 1);
+    return [lerp(from[0], to[0], clamped), lerp(from[1], to[1], clamped), lerp(from[2], to[2], clamped)];
+  }
+
+  function getHeatColor(percent: number) {
+    const normalized = clamp(percent, 0, 100) / 100;
+    const pivot = 0.7;
+    const black: [number, number, number] = [6, 6, 6];
+    const yellow: [number, number, number] = [255, 199, 0];
+    const red: [number, number, number] = [220, 38, 38];
+    const rgb =
+      normalized <= pivot
+        ? mixRgb(black, yellow, normalized / pivot)
+        : mixRgb(yellow, red, (normalized - pivot) / (1 - pivot));
+    return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+  }
 
   async function handleShare() {
     trackEvent(GA_EVENTS.SHARE_CLICK);
@@ -82,14 +110,20 @@
     <p class="relative text-xs text-neutral-500 mt-3 tracking-widest light:text-neutral-600">
       比多少比例的人年纪大？
     </p>
-    <p class="relative text-6xl md:text-8xl font-light text-paper-50 tracking-tight light:text-ink-950">
+    <p
+      class="relative text-6xl md:text-8xl font-light text-paper-50 tracking-tight light:text-ink-950"
+      style={`color:${relativePercentColor}`}
+    >
       {relativePercentDisplay}<span class="text-3xl md:text-4xl">%</span>
     </p>
   </div>
 
   <!-- 已度过百分比 -->
   <div class="text-center space-y-2">
-    <h2 class="text-5xl md:text-7xl font-light text-paper-50 tracking-tight light:text-ink-950">
+    <h2
+      class="text-5xl md:text-7xl font-light text-paper-50 tracking-tight light:text-ink-950"
+      style={`color:${filledPercentColor}`}
+    >
       {percentDisplay}%
     </h2>
     <p class="text-lg md:text-xl text-neutral-400 font-light light:text-neutral-600">
@@ -200,7 +234,9 @@
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">超中位数比例</dt>
-      <dd class="font-medium text-paper-50 light:text-ink-950">{relativePercentDisplay}%</dd>
+      <dd class="font-medium text-paper-50 light:text-ink-950" style={`color:${relativePercentColor}`}>
+        {relativePercentDisplay}%
+      </dd>
     </div>
   </dl>
 
