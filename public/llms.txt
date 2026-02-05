@@ -1,0 +1,9 @@
+# LifeSpent
+
+See how much of your life has already passed—by age and median life expectancy. No judgment, just math. A calm reflection on time.
+
+Average life expectancy is not the endpoint, but a reference. Face the remaining time and make each day more conscious.
+
+A quiet reflection on time. No judgment, just math.
+
+If needed, you can customize the average life expectancy and population median age reference values in the input panel.
