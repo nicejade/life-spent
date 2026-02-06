@@ -28,8 +28,10 @@
   $: relativeDeltaYearsDisplay = `${relativeDeltaYears >= 0 ? '+' : '-'}${Math.abs(relativeDeltaYears).toFixed(1)}`;
   $: relativeDeltaPercent = result.relativeAgeDeltaPercent;
   $: relativeDeltaPercentDisplay = `${relativeDeltaPercent >= 0 ? '+' : '-'}${Math.abs(relativeDeltaPercent).toFixed(1)}`;
-  $: filledPercentColor = getHeatColor(filledPercent);
-  $: relativeDeltaColor = getHeatColor(Math.min(Math.abs(relativeDeltaPercent), 100));
+  $: filledPercentColor = getFilledPercentColor(filledPercent);
+  $: relativeDeltaColor = relativeDeltaPercent < 0 
+    ? 'rgb(255 255 255)' 
+    : getRelativeDeltaColor(Math.min(Math.abs(relativeDeltaPercent), 100));
   $: medianGap = result.yearsToMedianAge;
   $: medianGapLabel =
     medianGap >= 0
@@ -61,15 +63,28 @@
     return [lerp(from[0], to[0], clamped), lerp(from[1], to[1], clamped), lerp(from[2], to[2], clamped)];
   }
 
-  function getHeatColor(percent: number) {
+  function getRelativeDeltaColor(percent: number) {
     const normalized = clamp(percent, 0, 100) / 100;
     const pivot = 0.7;
-    const black: [number, number, number] = [6, 6, 6];
+    const white: [number, number, number] = [255, 255, 255];
     const yellow: [number, number, number] = [255, 199, 0];
     const red: [number, number, number] = [220, 38, 38];
     const rgb =
       normalized <= pivot
-        ? mixRgb(black, yellow, normalized / pivot)
+        ? mixRgb(white, yellow, normalized / pivot)
+        : mixRgb(yellow, red, (normalized - pivot) / (1 - pivot));
+    return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+  }
+
+  function getFilledPercentColor(percent: number) {
+    const normalized = clamp(percent, 0, 100) / 100;
+    const pivot = 0.7;
+    const white: [number, number, number] = [255, 255, 255];
+    const yellow: [number, number, number] = [255, 199, 0];
+    const red: [number, number, number] = [220, 38, 38];
+    const rgb =
+      normalized <= pivot
+        ? mixRgb(white, yellow, normalized / pivot)
         : mixRgb(yellow, red, (normalized - pivot) / (1 - pivot));
     return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
   }

@@ -1,18 +1,86 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { calculateLifePercent } from './helper/lifeSpent';
+  import { calculateLifePercent, validateBirthDate } from './helper/lifeSpent';
   import { parseShareParams, birthStringToDate } from './helper/urlParams';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import Header from './components/Header.svelte';
   import Footer from './components/Footer.svelte';
-  import { DEFAULT_LIFE_EXPECTANCY } from './helper/constant'
+  import { DEFAULT_LIFE_EXPECTANCY, DEFAULT_POPULATION_MEDIAN_AGE, STORAGE_KEY, LIFE_EXPECTANCY_MIN, LIFE_EXPECTANCY_MAX, POPULATION_MEDIAN_AGE_MIN, POPULATION_MEDIAN_AGE_MAX } from './helper/constant'
   import type { Gender, LifeCalculation } from './types/main';
   import { trackEvent, GA_EVENTS } from './helper/ga';
-  import { locale, getLocaleFromPath, getPathWithoutLocale, getLocalizedPath, SUPPORTED_LOCALES, t, formatString } from './helper/i18n';
+  import { locale, getLocaleFromPath, getPathWithoutLocale, getLocalizedPath, t, formatString } from './helper/i18n';
   import { get } from 'svelte/store';
 
   let result: LifeCalculation | null = null;
+
+  interface StoredSettings {
+    selectedYear: string;
+    selectedMonth: string;
+    selectedDay: string;
+    gender: Gender;
+    lifeExpectancyInput: string;
+    populationMedianAgeInput: string;
+  }
+
+  function loadSettingsFromStorage(): StoredSettings | null {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch {
+      // ignore parse errors
+    }
+    return null;
+  }
+
+  function loadAndCalculateFromStorage(): void {
+    const settings = loadSettingsFromStorage();
+    if (!settings) {
+      return;
+    }
+
+    // 验证必要的字段是否存在
+    if (!settings.selectedYear || !settings.selectedMonth || !settings.selectedDay || !settings.gender) {
+      return;
+    }
+
+    // 构建出生日期
+    const year = parseInt(settings.selectedYear, 10);
+    const month = parseInt(settings.selectedMonth, 10);
+    const day = parseInt(settings.selectedDay, 10);
+
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+      return;
+    }
+
+    const birthDate = new Date(year, month - 1, day);
+
+    // 验证日期有效性
+    if (isNaN(birthDate.getTime()) || !validateBirthDate(birthDate)) {
+      return;
+    }
+
+    // 获取期望寿命和人口中位年龄
+    const lifeExpectancyParsed = parseFloat(settings.lifeExpectancyInput);
+    const lifeExpectancy = isNaN(lifeExpectancyParsed) || lifeExpectancyParsed < LIFE_EXPECTANCY_MIN || lifeExpectancyParsed > LIFE_EXPECTANCY_MAX
+      ? DEFAULT_LIFE_EXPECTANCY[settings.gender]
+      : lifeExpectancyParsed;
+
+    const populationMedianAgeParsed = parseFloat(settings.populationMedianAgeInput);
+    const populationMedianAge = isNaN(populationMedianAgeParsed) || populationMedianAgeParsed < POPULATION_MEDIAN_AGE_MIN || populationMedianAgeParsed > POPULATION_MEDIAN_AGE_MAX
+      ? DEFAULT_POPULATION_MEDIAN_AGE
+      : populationMedianAgeParsed;
+
+    // 计算并显示结果
+    result = calculateLifePercent({
+      birthDate,
+      gender: settings.gender,
+      lifeExpectancy,
+      populationMedianAge
+    });
+  }
 
   // Check for share parameters on mount
   onMount(() => {
@@ -94,6 +162,9 @@
         lifeExpectancy: shareParams.lifeExpectancy,
         populationMedianAge: shareParams.populationMedianAge
       });
+    } else {
+      // 如果没有 URL 参数，检查 localStorage 中是否有保存的数据
+      loadAndCalculateFromStorage();
     }
   });
 
