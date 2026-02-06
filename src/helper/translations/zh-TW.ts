@@ -26,9 +26,8 @@ export const zhTW: Translations = {
   },
   footer: {
     brandDesc: '對時間的靜默反思。不帶判斷，只有數學。',
-    socialTitle: 'Social | Follow us',
+    socialTitle: '社群 | 追蹤我們',
     tagline: 'LifeSpent · 珍惜此刻',
-    copyright: '© {year} lovejade.cn',
     allRightsReserved: '保留所有權利',
   },
   inputPanel: {
@@ -56,8 +55,8 @@ export const zhTW: Translations = {
     },
   },
   resultSummary: {
-    relativeAgePosition: '相對年齡位置',
-    relativeAgeQuestion: '比多少比例的人年紀大？',
+    relativeAgePosition: '與中位年齡差距',
+    relativeAgeQuestion: '比中位年齡大多少，或小多少？',
     percentSpent: '已度過',
     remaining: '餘下',
     referenceNote: '參考平均預期壽命是統計',
@@ -71,8 +70,8 @@ export const zhTW: Translations = {
     lifeExpectancy: '平均預期壽命',
     yearsRemaining: '預計剩餘歲月',
     populationMedianAge: '人口中位年齡',
-    relativeAgePercent: '超中位數比例',
-    relativeAge: '相對年齡',
+    relativeAgePercent: '相對中位年齡差距（%）',
+    relativeAge: '中位年齡差距',
     medianGapBefore: '距離人口中位年齡還有 {age}',
     medianGapAfter: '已超過人口中位年齡 {age}',
     medianGapNote: '當你超過人口中位年齡，意味著你已比一半的人更年長。',

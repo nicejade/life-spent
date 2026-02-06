@@ -21,6 +21,7 @@ export interface LifeCalculation {
   populationMedianAge: number;
   percentSpent: number;
   yearsRemaining: number;
-  relativeAgePercent: number;
+  relativeAgeDeltaPercent: number;
+  relativeAgeDeltaYears: number;
   yearsToMedianAge: number;
 }

@@ -225,7 +225,7 @@
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.currentAge}</dt>
-      <dd class="font-medium text-paper-50 light:text-ink-950">{formatAge(result.currentAge)}</dd>
+      <dd class="font-medium text-paper-50 light:text-ink-950">{formatAge(result.currentAge)} {$t.common.yearsOld}</dd>
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.lifeExpectancy}</dt>
@@ -233,7 +233,7 @@
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.yearsRemaining}</dt>
-      <dd class="font-medium text-paper-50 light:text-ink-950">{formatAge(result.yearsRemaining)}</dd>
+      <dd class="font-medium text-paper-50 light:text-ink-950">{formatAge(result.yearsRemaining)} {$t.common.yearsOld}</dd>
     </div>
     <div class="flex flex-col">
       <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.populationMedianAge}</dt>

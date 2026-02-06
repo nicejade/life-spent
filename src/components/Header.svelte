@@ -56,7 +56,7 @@
       <a
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 p-2.5 rounded-xl text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50"
+        class="hidden md:inline-flex items-center gap-1.5 p-2.5 rounded-xl text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50"
         href="https://x.com/intent/user?screen_name=MarshalXuan"
         title="X | Twitter Follow MarshalXuan"
         aria-label={$t.header.followX}
@@ -75,7 +75,7 @@
         rel="noopener noreferrer"
         title="GitHub"
         aria-label={$t.header.viewGithub}
-        class="inline-flex items-center gap-1.5 p-2.5 rounded-xl text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50"
+        class="hidden md:inline-flex items-center gap-1.5 p-2.5 rounded-xl text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50"
         on:click={handleNavGithub}
       >
         <SvgIcon name="github" width={20} height={20} color="currentColor" />

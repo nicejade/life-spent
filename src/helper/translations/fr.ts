@@ -26,9 +26,8 @@ export const fr: Translations = {
   },
   footer: {
     brandDesc: 'Une réflexion tranquille sur le temps. Aucun jugement, juste des mathématiques.',
-    socialTitle: 'Social | Suivez-nous',
+    socialTitle: 'Suivez-nous',
     tagline: 'LifeSpent · Chérissez ce moment',
-    copyright: '© {year} lovejade.cn',
     allRightsReserved: 'Tous droits réservés',
   },
   inputPanel: {
@@ -56,8 +55,8 @@ export const fr: Translations = {
     },
   },
   resultSummary: {
-    relativeAgePosition: 'Position d\'Âge Relative',
-    relativeAgeQuestion: 'Plus âgé que quel pourcentage de personnes ?',
+    relativeAgePosition: 'Écart à l\'Âge Médian',
+    relativeAgeQuestion: 'De combien au-dessus ou en dessous de l\'âge médian ?',
     percentSpent: 'Écoulé',
     remaining: 'Restant',
     referenceNote: 'L\'espérance de vie moyenne de référence est statistique',
@@ -71,8 +70,8 @@ export const fr: Translations = {
     lifeExpectancy: 'Espérance de Vie Moyenne',
     yearsRemaining: 'Années Restantes Estimées',
     populationMedianAge: 'Âge Médian de la Population',
-    relativeAgePercent: 'Pourcentage d\'Âge Relatif',
-    relativeAge: 'Âge Relatif',
+    relativeAgePercent: 'Écart vs Médian (%)',
+    relativeAge: 'Écart à l\'Âge Médian',
     medianGapBefore: '{age} jusqu\'à l\'âge médian de la population',
     medianGapAfter: '{age} après l\'âge médian de la population',
     medianGapNote: 'Lorsque vous dépassez l\'âge médian de la population, cela signifie que vous êtes plus âgé que la moitié des personnes.',

@@ -26,9 +26,8 @@ export const th: Translations = {
   },
   footer: {
     brandDesc: 'การไตร่ตรองอย่างเงียบๆ เกี่ยวกับเวลา ไม่มีการตัดสิน มีเพียงคณิตศาสตร์',
-    socialTitle: 'Social | ติดตามเรา',
+    socialTitle: 'ติดตามเรา',
     tagline: 'LifeSpent · เก็บรักษาช่วงเวลานี้',
-    copyright: '© {year} lovejade.cn',
     allRightsReserved: 'สงวนลิขสิทธิ์',
   },
   inputPanel: {
@@ -56,8 +55,8 @@ export const th: Translations = {
     },
   },
   resultSummary: {
-    relativeAgePosition: 'ตำแหน่งอายุสัมพัทธ์',
-    relativeAgeQuestion: 'แก่กว่ากี่เปอร์เซ็นต์ของคน?',
+    relativeAgePosition: 'ส่วนต่างจากอายุมัธยฐาน',
+    relativeAgeQuestion: 'มากหรือน้อยกว่าอายุมัธยฐานเท่าไร?',
     percentSpent: 'ใช้ไป',
     remaining: 'เหลือ',
     referenceNote: 'อายุขัยเฉลี่ยอ้างอิงเป็นสถิติ',
@@ -71,8 +70,8 @@ export const th: Translations = {
     lifeExpectancy: 'อายุขัยเฉลี่ย',
     yearsRemaining: 'ปีที่เหลืออยู่โดยประมาณ',
     populationMedianAge: 'อายุมัธยฐานของประชากร',
-    relativeAgePercent: 'เปอร์เซ็นต์อายุสัมพัทธ์',
-    relativeAge: 'อายุสัมพัทธ์',
+    relativeAgePercent: 'ส่วนต่างจากอายุมัธยฐาน (%)',
+    relativeAge: 'ส่วนต่างจากอายุมัธยฐาน',
     medianGapBefore: '{age} จนถึงอายุมัธยฐานของประชากร',
     medianGapAfter: '{age} ผ่านอายุมัธยฐานของประชากร',
     medianGapNote: 'เมื่อคุณเกินอายุมัธยฐานของประชากร นั่นหมายความว่าคุณแก่กว่าครึ่งหนึ่งของคน',

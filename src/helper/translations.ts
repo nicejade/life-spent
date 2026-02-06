@@ -33,7 +33,6 @@ export interface Translations {
     brandDesc: string;
     socialTitle: string;
     tagline: string;
-    copyright: string;
     allRightsReserved: string;
   };
   

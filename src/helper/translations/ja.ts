@@ -26,9 +26,8 @@ export const ja: Translations = {
   },
   footer: {
     brandDesc: '時間についての静かな内省。判断はなく、ただ数学だけ。',
-    socialTitle: 'Social | Follow us',
+    socialTitle: 'ソーシャル | フォロー',
     tagline: 'LifeSpent · この瞬間を大切に',
-    copyright: '© {year} lovejade.cn',
     allRightsReserved: '全著作権所有',
   },
   inputPanel: {
@@ -56,8 +55,8 @@ export const ja: Translations = {
     },
   },
   resultSummary: {
-    relativeAgePosition: '相対年齢位置',
-    relativeAgeQuestion: '何パーセントの人より年上ですか？',
+    relativeAgePosition: '中央値年齢との差',
+    relativeAgeQuestion: '中央値年齢よりどれだけ上/下ですか？',
     percentSpent: '過ごした',
     remaining: '残り',
     referenceNote: '参照平均余命は統計値です',
@@ -71,8 +70,8 @@ export const ja: Translations = {
     lifeExpectancy: '平均余命',
     yearsRemaining: '推定残り年数',
     populationMedianAge: '人口中央値年齢',
-    relativeAgePercent: '相対年齢パーセント',
-    relativeAge: '相対年齢',
+    relativeAgePercent: '中央値との差（%）',
+    relativeAge: '中央値との差',
     medianGapBefore: '人口中央値年齢まで {age}',
     medianGapAfter: '人口中央値年齢を {age} 超過',
     medianGapNote: '人口中央値年齢を超えると、あなたは半分の人より年上であることを意味します。',

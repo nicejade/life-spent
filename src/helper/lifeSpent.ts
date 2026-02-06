@@ -104,11 +104,7 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
 }
 
 export function formatAge(age: number): string {
-  const currentLocale = get(locale);
-  const translations = get(t);
-  const years = Math.floor(age);
-  const yearsOldText = translations.common.yearsOld;
-  return `${years} ${yearsOldText}`;
+  return `${age.toFixed(2)}`;
 }
 
 export function formatDate(date: Date): string {

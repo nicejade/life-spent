@@ -28,12 +28,12 @@
   aria-label="Footer"
 >
   <div class="container mx-auto px-4 py-8 md:py-10">
-    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-0">
+    <div class="flex flex-col md:space-y-0 space-y-4 md:flex-row md:items-start md:justify-between gap-0">
       <section class="md:w-1/2 w-full flex-shrink-0" aria-labelledby="footer-brand-heading">
         <h2 id="footer-brand-heading" class="sr-only">
           {brandTitle}
         </h2>
-        <div class="flex items-center gap-3 mb-2">
+        <div class="flex items-center gap-3 md:mb-2 mb-0">
           <span
             class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 light:bg-black/5 text-paper-50 light:text-ink-950"
             aria-hidden="true"
@@ -58,7 +58,7 @@
       <section class="md:w-1/2 w-full md:text-right text-left md:flex-shrink-0" aria-labelledby="footer-social-heading">
         <h2
           id="footer-social-heading"
-          class="text-xs uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500 mb-4"
+          class="text-sm uppercase tracking-[0.4em] text-neutral-400 light:text-neutral-500 mb-2 md:mb-4"
         >
           {$t.footer.socialTitle}
         </h2>
@@ -94,7 +94,7 @@
         {$t.footer.tagline}
       </p>
       <p class="text-sm text-neutral-500 light:text-neutral-500 font-medium tracking-wide">
-          {formatString($t.footer.copyright, { year: String(currentYear) })} <a href="https://www.lovejade.cn/" class="text-[var(--sl-color-gray-3)] px-2 py-1 rounded-md transition-all hover:bg-white/[0.1] bg-white/[0.1] [:root[data-theme='light']_&]:hover:bg-black/[0.06] hover:text-[var(--sl-color-text-accent)] decoration-none no-underline border-none">lovejade.cn</a> · {$t.footer.allRightsReserved}
+          {formatString('© {year}', { year: String(currentYear) })} <a href="https://www.lovejade.cn/" class="text-[var(--sl-color-gray-3)] px-2 py-1 rounded-md transition-all hover:bg-white/[0.1] bg-white/[0.1] [:root[data-theme='light']_&]:hover:bg-black/[0.06] hover:text-[var(--sl-color-text-accent)] decoration-none no-underline border-none">lovejade.cn</a> · {$t.footer.allRightsReserved}
       </p>
     </div>
   </div>
