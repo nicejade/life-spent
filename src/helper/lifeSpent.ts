@@ -85,8 +85,8 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
   const populationMedianAge = info.populationMedianAge ?? DEFAULT_POPULATION_MEDIAN_AGE;
   const percentSpent = (currentAge / lifeExpectancy) * 100;
   const yearsRemaining = lifeExpectancy - currentAge;
-  // 计算你比多少比例的人年纪大：当年龄为0时是0%，等于中位年龄时是50%，是中位年龄2倍时是100%
-  const relativeAgePercent = (currentAge / populationMedianAge) * 50;
+  const relativeAgeDeltaYears = currentAge - populationMedianAge;
+  const relativeAgeDeltaPercent = (relativeAgeDeltaYears / populationMedianAge) * 100;
   const yearsToMedianAge = populationMedianAge - currentAge;
   
   return {
@@ -97,7 +97,8 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
     populationMedianAge,
     percentSpent: Math.min(100, Math.max(0, percentSpent)),
     yearsRemaining: Math.max(0, yearsRemaining),
-    relativeAgePercent: Math.max(0, relativeAgePercent),
+    relativeAgeDeltaPercent,
+    relativeAgeDeltaYears,
     yearsToMedianAge
   };
 }

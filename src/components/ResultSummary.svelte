@@ -24,9 +24,12 @@
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
   $: impactData = getImpactData(result, $t);
-  $: relativePercentDisplay = result.relativeAgePercent.toFixed(1);
+  $: relativeDeltaYears = result.relativeAgeDeltaYears;
+  $: relativeDeltaYearsDisplay = `${relativeDeltaYears >= 0 ? '+' : '-'}${Math.abs(relativeDeltaYears).toFixed(1)}`;
+  $: relativeDeltaPercent = result.relativeAgeDeltaPercent;
+  $: relativeDeltaPercentDisplay = `${relativeDeltaPercent >= 0 ? '+' : '-'}${Math.abs(relativeDeltaPercent).toFixed(1)}`;
   $: filledPercentColor = getHeatColor(filledPercent);
-  $: relativePercentColor = getHeatColor(Math.min(Math.max(result.relativeAgePercent, 0), 100));
+  $: relativeDeltaColor = getHeatColor(Math.min(Math.abs(relativeDeltaPercent), 100));
   $: medianGap = result.yearsToMedianAge;
   $: medianGapLabel =
     medianGap >= 0
@@ -113,9 +116,12 @@
     </p>
     <p
       class="relative text-6xl md:text-8xl font-light text-paper-50 tracking-tight light:text-ink-950"
-      style={`color:${relativePercentColor}`}
+      style={`color:${relativeDeltaColor}`}
     >
-      {relativePercentDisplay}<span class="text-3xl md:text-4xl">%</span>
+      {relativeDeltaYearsDisplay}<span class="text-3xl md:text-4xl">{$t.common.yearsOld}</span>
+    </p>
+    <p class="relative text-base text-neutral-500 mt-2 tracking-[0.4em] light:text-neutral-600" style={`color:${relativeDeltaColor}`}>
+      {relativeDeltaPercentDisplay}%
     </p>
   </div>
 
@@ -234,9 +240,9 @@
       <dd class="font-medium text-paper-50 light:text-ink-950">{result.populationMedianAge} {$t.common.yearsOld}</dd>
     </div>
     <div class="flex flex-col">
-      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.relativeAgePercent}</dt>
-      <dd class="font-medium text-paper-50 light:text-ink-950" style={`color:${relativePercentColor}`}>
-        {relativePercentDisplay}%
+      <dt class="text-xs text-neutral-500 uppercase tracking-[0.3em] light:text-neutral-600">{$t.resultSummary.relativeAge}</dt>
+      <dd class="font-medium text-paper-50 light:text-ink-950" style={`color:${relativeDeltaColor}`}>
+        {relativeDeltaYearsDisplay} {$t.common.yearsOld}
       </dd>
     </div>
   </dl>
