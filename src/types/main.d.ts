@@ -11,6 +11,7 @@ export interface BirthInfo {
   gender: Gender;
   lifeExpectancy?: number;
   populationMedianAge?: number;
+  isLifeExpectancyCustom?: boolean;
 }
 
 export interface LifeCalculation {

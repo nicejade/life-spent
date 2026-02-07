@@ -67,6 +67,11 @@
     const lifeExpectancy = isNaN(lifeExpectancyParsed) || lifeExpectancyParsed < LIFE_EXPECTANCY_MIN || lifeExpectancyParsed > LIFE_EXPECTANCY_MAX
       ? DEFAULT_LIFE_EXPECTANCY[settings.gender]
       : lifeExpectancyParsed;
+    
+    // 判断用户是否手动设置了预期寿命
+    const isLifeExpectancyCustom = !isNaN(lifeExpectancyParsed) && 
+      lifeExpectancyParsed >= LIFE_EXPECTANCY_MIN && 
+      lifeExpectancyParsed <= LIFE_EXPECTANCY_MAX;
 
     const populationMedianAgeParsed = parseFloat(settings.populationMedianAgeInput);
     const populationMedianAge = isNaN(populationMedianAgeParsed) || populationMedianAgeParsed < POPULATION_MEDIAN_AGE_MIN || populationMedianAgeParsed > POPULATION_MEDIAN_AGE_MAX
@@ -78,7 +83,8 @@
       birthDate,
       gender: settings.gender,
       lifeExpectancy,
-      populationMedianAge
+      populationMedianAge,
+      isLifeExpectancyCustom
     });
   }
 
@@ -156,11 +162,13 @@
     const shareParams = parseShareParams();
     if (shareParams) {
       const birthDate = birthStringToDate(shareParams.birth);
+      // 从 URL 参数中获取的预期寿命视为用户手动设置的
       result = calculateLifePercent({
         birthDate,
         gender: shareParams.gender,
         lifeExpectancy: shareParams.lifeExpectancy,
-        populationMedianAge: shareParams.populationMedianAge
+        populationMedianAge: shareParams.populationMedianAge,
+        isLifeExpectancyCustom: true
       });
     } else {
       // 如果没有 URL 参数，检查 localStorage 中是否有保存的数据
@@ -172,9 +180,16 @@
     birthDate: Date,
     gender: Gender,
     lifeExpectancy: number,
-    populationMedianAge: number
+    populationMedianAge: number,
+    isLifeExpectancyCustom: boolean
   ) {
-    result = calculateLifePercent({ birthDate, gender, lifeExpectancy, populationMedianAge });
+    result = calculateLifePercent({ 
+      birthDate, 
+      gender, 
+      lifeExpectancy, 
+      populationMedianAge,
+      isLifeExpectancyCustom
+    });
   }
 
   function handleReset() {

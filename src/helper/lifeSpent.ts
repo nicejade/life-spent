@@ -81,7 +81,13 @@ export function calculateLifePercent(info: BirthInfo): LifeCalculation {
   const ageInMilliseconds = now.getTime() - birth.getTime();
   const currentAge = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
   
-  const lifeExpectancy = info.lifeExpectancy ?? DEFAULT_LIFE_EXPECTANCY[info.gender];
+  let lifeExpectancy = info.lifeExpectancy ?? DEFAULT_LIFE_EXPECTANCY[info.gender];
+  
+  // 如果当前年龄超过预期寿命，自动调整为人类最大年龄 122
+  if (currentAge > lifeExpectancy) {
+    lifeExpectancy = MAX_HUMAN_AGE;
+  }
+  
   const populationMedianAge = info.populationMedianAge ?? DEFAULT_POPULATION_MEDIAN_AGE;
   const percentSpent = (currentAge / lifeExpectancy) * 100;
   const yearsRemaining = lifeExpectancy - currentAge;

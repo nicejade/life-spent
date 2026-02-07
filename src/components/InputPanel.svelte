@@ -96,7 +96,8 @@
     birthDate: Date,
     gender: Gender,
     lifeExpectancy: number,
-    populationMedianAge: number
+    populationMedianAge: number,
+    isLifeExpectancyCustom: boolean
   ) => void;
 
   const currentYear = new Date().getFullYear();
@@ -268,6 +269,11 @@
       }
     }
 
+    // 判断用户是否手动设置了预期寿命
+    const isLifeExpectancyCustom = !isNaN(lifeExpectancyValue) && 
+      lifeExpectancyValue >= LIFE_EXPECTANCY_MIN && 
+      lifeExpectancyValue <= LIFE_EXPECTANCY_MAX;
+
     // Track calculate event
     trackEvent(GA_EVENTS.SUBMIT_CALCULATE, {
       birth_date: birthDateStr,
@@ -276,7 +282,7 @@
       population_median_age: populationMedianAge,
     });
 
-    onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge);
+    onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge, isLifeExpectancyCustom);
   }
 </script>
 
