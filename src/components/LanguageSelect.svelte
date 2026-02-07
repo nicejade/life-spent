@@ -3,6 +3,7 @@
   import { Listbox, ListboxButton, ListboxOptions, ListboxOption, Transition } from '@rgossiaux/svelte-headlessui';
   import SvgIcon from './SvgIcon.svelte';
   import { onMount, onDestroy } from 'svelte';
+  import { trackEvent, GA_EVENTS } from '../helper/ga';
 
   let selectedLocale: Locale = $locale;
   let unsubscribe: (() => void) | null = null;
@@ -26,6 +27,12 @@
       isUpdatingFromStore = true;
       locale.set(newLocale);
       isUpdatingFromStore = false;
+      
+      // Track language change
+      trackEvent(GA_EVENTS.SELECT_LANGUAGE, {
+        language: newLocale,
+        previous_language: $locale
+      });
       
       // Update URL to reflect new locale
       const currentPath = window.location.pathname;

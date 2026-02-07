@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t, formatString } from '../helper/i18n';
+  import { trackEvent, GA_EVENTS } from '../helper/ga';
 
   interface SocialLink {
     href: string;
@@ -17,6 +18,27 @@
     { href: 'https://mastodon.social/@nicejade', img: 'mastodon', alt: 'Mastodon' },
     { href: 'https://www.jeffjade.com/', img: 'blogger', alt: 'Blog' },
   ];
+
+  const socialEventMap: Record<string, string> = {
+    'Github': GA_EVENTS.NAV_GITHUB,
+    'X | Twitter': GA_EVENTS.NAV_X_FOLLOW,
+    'Facebook': GA_EVENTS.NAV_FACEBOOK,
+    'Threads': GA_EVENTS.NAV_THREADS,
+    'YouTube': GA_EVENTS.NAV_YOUTUBE,
+    'Bilibili': GA_EVENTS.NAV_BILIBILI,
+    'Mastodon': GA_EVENTS.NAV_MASTODON,
+    'Blog': GA_EVENTS.NAV_BLOGGER,
+  };
+
+  function handleSocialClick(link: SocialLink) {
+    const eventName = socialEventMap[link.alt];
+    if (!eventName) return;
+
+    trackEvent(eventName, {
+      platform: link.alt,
+      url: link.href,
+    });
+  }
 
   const currentYear = new Date().getFullYear();
 
@@ -72,6 +94,7 @@
               title={link.alt}
               aria-label={link.alt}
               class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-paper-50 light:text-ink-950 hover:bg-white/10 light:hover:bg-black/10 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-paper-200/50 light:focus-visible:ring-ink-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 light:focus-visible:ring-offset-paper-50"
+              on:click={() => handleSocialClick(link)}
             >
               <img
                 src="/svgs/{link.img}.svg"
