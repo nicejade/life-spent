@@ -15,7 +15,8 @@ export default {
           'Source Han Sans SC',
           'sans-serif'
         ],
-        display: ['Cormorant', 'Georgia', 'serif']
+        display: ['Cormorant', 'Georgia', 'serif'],
+        brand: ['"Smooch Sans"', '"SF Pro Display"', 'Helvetica', 'sans-serif']
       },
       colors: {
         ink: {

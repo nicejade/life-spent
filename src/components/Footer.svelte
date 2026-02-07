@@ -55,6 +55,7 @@
         <h2 id="footer-brand-heading" class="sr-only">
           {brandTitle}
         </h2>
+        
         <div class="flex items-center gap-3 md:mb-2 mb-0">
           <span
             class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 light:bg-black/5 text-paper-50 light:text-ink-950"
@@ -68,9 +69,9 @@
               class="w-5 h-5 pointer-events-none invert light:invert-0"
             />
           </span>
-          <span class="text-base font-medium text-paper-50 light:text-ink-950 tracking-tight">
-            {brandTitle}
-          </span>
+          <strong class="font-display text-xl font-semibold tracking-tight">
+            Lif<span class="text-ceremonial-300 light:text-ceremonial-600 underline decoration-ceremonial-400/60 light:decoration-ceremonial-700/50 underline-offset-2">e</span>Sp<span class="text-ceremonial-300 light:text-ceremonial-600 underline decoration-ceremonial-400/60 light:decoration-ceremonial-700/50 underline-offset-2">e</span>nt
+          </strong>
         </div>
         <p class="text-sm text-neutral-400 light:text-neutral-600 pl-[3.25rem] leading-relaxed">
           {$t.footer.brandDesc}

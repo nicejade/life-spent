@@ -44,7 +44,7 @@
         height="28"
         class="shrink-0 w-7 h-7 invert light:invert-0"
       />
-      <strong class="font-display text-xl font-semibold tracking-tight">
+      <strong class="font-brand text-[22px] font-semibold tracking-[0.02em]">
         LifeSpent
       </strong>
     </a>
