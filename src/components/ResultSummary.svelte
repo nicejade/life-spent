@@ -7,6 +7,7 @@
   import ImpactGridAges from './impact/ImpactGridAges.svelte';
   import type { LifeCalculation } from '../types/main';
   import { trackEvent, GA_EVENTS } from '../helper/ga';
+  import { theme } from '../helper/theme';
   import { t, formatString } from '../helper/i18n';
 
   export let result: LifeCalculation;
@@ -29,9 +30,10 @@
   $: relativeDeltaPercent = result.relativeAgeDeltaPercent;
   $: relativeDeltaPercentDisplay = `${relativeDeltaPercent >= 0 ? '+' : '-'}${Math.abs(relativeDeltaPercent).toFixed(1)}`;
   $: filledPercentColor = getFilledPercentColor(filledPercent);
-  $: relativeDeltaColor = relativeDeltaPercent < 0 
-    ? 'rgb(255 255 255)' 
-    : getRelativeDeltaColor(Math.min(Math.abs(relativeDeltaPercent), 100));
+  $: relativeDeltaBaseColor = $theme === 'light' ? 'rgb(11 11 11)' : 'rgb(255 255 255)';
+  $: relativeDeltaColor = relativeDeltaPercent < 0
+    ? relativeDeltaBaseColor
+    : getRelativeDeltaColor(Math.min(Math.abs(relativeDeltaPercent), 100), $theme);
   $: medianGap = result.yearsToMedianAge;
   $: medianGapLabel =
     medianGap >= 0
@@ -63,15 +65,15 @@
     return [lerp(from[0], to[0], clamped), lerp(from[1], to[1], clamped), lerp(from[2], to[2], clamped)];
   }
 
-  function getRelativeDeltaColor(percent: number) {
+  function getRelativeDeltaColor(percent: number, themeValue: 'dark' | 'light') {
     const normalized = clamp(percent, 0, 100) / 100;
     const pivot = 0.7;
-    const white: [number, number, number] = [255, 255, 255];
+    const base: [number, number, number] = themeValue === 'light' ? [11, 11, 11] : [255, 255, 255];
     const yellow: [number, number, number] = [255, 199, 0];
     const red: [number, number, number] = [220, 38, 38];
     const rgb =
       normalized <= pivot
-        ? mixRgb(white, yellow, normalized / pivot)
+        ? mixRgb(base, yellow, normalized / pivot)
         : mixRgb(yellow, red, (normalized - pivot) / (1 - pivot));
     return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
   }
@@ -287,10 +289,9 @@
   <div class="flex gap-3">
     <button
       on:click={handleShare}
-      class="flex-1 px-6 py-3 bg-paper-50/95 hover:bg-paper-100 border border-paper-100/70
-             hover:border-paper-200 text-ink-950 rounded-xl transition-all cursor-pointer
-             light:bg-ink-950 light:text-paper-50 light:border-ink-900 light:hover:bg-ink-900
-             active:scale-[0.98] flex items-center justify-center gap-2"
+      class="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
+             text-neutral-200 rounded-xl transition-all cursor-pointer
+             light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700"
       aria-label={$t.resultSummary.shareLink}
     >
       {#if copySuccess}
@@ -301,9 +302,10 @@
     </button>
     <button
       on:click={handleResetClick}
-      class="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
-             text-neutral-200 rounded-xl transition-all cursor-pointer
-             light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700"
+      class="flex-1 px-6 py-3 bg-paper-50/95 hover:bg-paper-100 border border-paper-100/70
+             hover:border-paper-200 text-ink-950 rounded-xl transition-all cursor-pointer
+             light:bg-ink-950 light:text-paper-50 light:border-ink-900 light:hover:bg-ink-900
+             active:scale-[0.98] flex items-center justify-center gap-2"
       aria-label={$t.resultSummary.reset}
     >
       {$t.resultSummary.reset}
