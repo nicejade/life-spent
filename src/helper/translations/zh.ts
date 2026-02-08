@@ -5,6 +5,8 @@ export const zh: Translations = {
     tagline: 'LifeSpent · 反思之旅',
     title: '透过数据，与生命的流逝保持恰到好处的距离',
     subtitle: '以简洁的界面告诉你已走过的岁月，借助平均预期寿命与人群中位年龄提醒自己不止于当前的舒适。保持沉静，感受每一次呼吸。',
+    documentTitle: '你的人生已经过去了多少？| LifeSpent',
+    metaDescription: 'LifeSpent 是一款免费的人生进度计算器，根据你的年龄、预期寿命与人口中位年龄，展示你已经度过的人生比例。只是数学。',
     reminder: {
       title: '提醒',
       content: '平均预期寿命只是参考，无需恐慌。每一次深呼吸都是对剩余时间的拥抱。',

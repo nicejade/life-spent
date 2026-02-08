@@ -6,6 +6,10 @@ export interface Translations {
     tagline: string;
     title: string;
     subtitle: string;
+    /** Full document title for <title>, og:title, twitter:title (SEO / GEO / AEO). */
+    documentTitle: string;
+    /** Meta description for meta name="description", og:description, twitter:description. */
+    metaDescription: string;
     reminder: {
       title: string;
       content: string;

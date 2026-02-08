@@ -5,6 +5,8 @@ export const fr: Translations = {
     tagline: 'LifeSpent · Un Voyage de Réflexion',
     title: 'À travers les données, maintenir une distance appropriée avec l\'écoulement de la vie',
     subtitle: 'Une interface simple vous indique les années que vous avez vécues, utilisant l\'espérance de vie moyenne et l\'âge médian de la population pour vous rappeler que le confort n\'est pas le point final. Restez calme et ressentez chaque respiration.',
+    documentTitle: 'Quelle part de votre vie avez-vous déjà vécue ? | LifeSpent',
+    metaDescription: 'LifeSpent est un calculateur gratuit du pourcentage de vie écoulée, selon votre âge, l\'espérance de vie et l\'âge médian de la population. Juste des chiffres.',
     reminder: {
       title: 'Rappel',
       content: 'L\'espérance de vie moyenne n\'est qu\'une référence, pas besoin de paniquer. Chaque respiration profonde est une étreinte du temps restant.',

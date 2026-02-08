@@ -107,11 +107,11 @@
     locale.subscribe((loc) => {
       document.documentElement.lang = loc === 'zh-TW' ? 'zh-Hant' : loc === 'zh' ? 'zh-Hans' : loc;
       
-      // Update meta tags
+      // Update meta tags (SEO / GEO / AEO: use localized documentTitle and metaDescription)
       const translations = get(t);
-      const title = `LifeSpent — ${translations.app.title}`;
-      const description = translations.app.subtitle;
-      
+      const title = translations.app.documentTitle;
+      const description = translations.app.metaDescription;
+
       document.title = title;
       
       // Update meta description

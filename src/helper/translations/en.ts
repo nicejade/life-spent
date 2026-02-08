@@ -5,6 +5,8 @@ export const en: Translations = {
     tagline: 'LifeSpent · A Journey of Reflection',
     title: 'Through data, maintain an appropriate distance from the passage of life',
     subtitle: 'A simple interface tells you the years you\'ve lived, using average life expectancy and population median age to remind yourself that comfort is not the endpoint. Stay calm and feel every breath.',
+    documentTitle: 'How Much of Your Life Is Already Spent? | LifeSpent',
+    metaDescription: 'LifeSpent is a free life percentage calculator that shows how much of your life has passed, based on your age, life expectancy, and population median age. Just math.',
     reminder: {
       title: 'Reminder',
       content: 'Average life expectancy is just a reference, no need to panic. Every deep breath is an embrace of the remaining time.',
