@@ -16,7 +16,7 @@ export default {
           'sans-serif'
         ],
         display: ['Cormorant', 'Georgia', 'serif'],
-        brand: ['"Smooch Sans"', '"SF Pro Display"', 'Helvetica', 'sans-serif']
+        brand: ['Smooch Sans', 'SF Pro Display', 'Helvetica', 'sans-serif']
       },
       colors: {
         ink: {
