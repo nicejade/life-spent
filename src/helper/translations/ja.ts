@@ -91,8 +91,8 @@ export const ja: Translations = {
     copyImageFailed: 'コピーに失敗しました',
     shareToTwitter: 'Twitterで共有',
     shareToFacebook: 'Facebookで共有',
-    shareText: '人生の {percent}% をすでに過ごしました（中央値の参考）。',
-    shareTitle: 'LifeSpent 結果',
+    shareText: '今年で {age}、人生の {percent}% をすでに歩んだ。時は待たない。あなたは？',
+    shareTitle: 'LifeSpent · あなたの人生の進捗',
     reset: '再計算',
   },
   impact: {

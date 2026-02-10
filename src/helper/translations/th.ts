@@ -91,8 +91,8 @@ export const th: Translations = {
     copyImageFailed: 'คัดลอกไม่สำเร็จ',
     shareToTwitter: 'แชร์ไป Twitter',
     shareToFacebook: 'แชร์ไป Facebook',
-    shareText: 'ฉันใช้ชีวิตไปแล้ว {percent}% (อ้างอิงค่ามัธยฐาน)',
-    shareTitle: 'ผลลัพธ์ LifeSpent',
+    shareText: 'ฉันอายุ {age} ใช้ชีวิตไปแล้ว {percent}% เวลาไม่รอใคร แล้วคุณล่ะ?',
+    shareTitle: 'LifeSpent · ความคืบหน้าชีวิตของคุณ',
     reset: 'คำนวณใหม่',
   },
   impact: {

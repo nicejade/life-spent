@@ -91,8 +91,8 @@ export const zhTW: Translations = {
     copyImageFailed: '複製失敗',
     shareToTwitter: '分享至 Twitter',
     shareToFacebook: '分享至 Facebook',
-    shareText: '我已度過人生的 {percent}%（參考中位壽命）。',
-    shareTitle: 'LifeSpent 計算結果',
+    shareText: '我今年 {age}，已走過人生的 {percent}%。時間不等人，你呢？',
+    shareTitle: 'LifeSpent · 你的人生進度條',
     reset: '重新計算',
   },
   impact: {

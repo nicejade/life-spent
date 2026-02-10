@@ -91,8 +91,8 @@ export const en: Translations = {
     copyImageFailed: 'Copy Failed',
     shareToTwitter: 'Share to Twitter',
     shareToFacebook: 'Share to Facebook',
-    shareText: 'I have spent {percent}% of my life (median reference).',
-    shareTitle: 'LifeSpent Result',
+    shareText: "I'm {age} old — {percent}% of my life is behind me. How about yours?",
+    shareTitle: 'LifeSpent — Your Life Progress',
     reset: 'Recalculate',
   },
   impact: {

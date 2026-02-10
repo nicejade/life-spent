@@ -91,8 +91,8 @@ export const ru: Translations = {
     copyImageFailed: 'Ошибка копирования',
     shareToTwitter: 'Поделиться в Twitter',
     shareToFacebook: 'Поделиться в Facebook',
-    shareText: 'Я уже прожил(а) {percent}% жизни (медианный ориентир).',
-    shareTitle: 'Результат LifeSpent',
+    shareText: 'Мне {age} — я уже прожил(а) {percent}% жизни. Время не ждёт. А вы?',
+    shareTitle: 'LifeSpent · Ваш прогресс жизни',
     reset: 'Пересчитать',
   },
   impact: {
