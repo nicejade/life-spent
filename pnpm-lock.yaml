@@ -11,6 +11,9 @@ importers:
       '@rgossiaux/svelte-headlessui':
         specifier: ^2.0.0
         version: 2.0.0(svelte@4.2.20)
+      '@zumer/snapdom':
+        specifier: ^2.0.2
+        version: 2.0.2
       svelte:
         specifier: ^4.2.8
         version: 4.2.20
@@ -382,6 +385,9 @@ packages:
 
   '@types/svgo@2.6.4':
     resolution: {integrity: sha512-l4cmyPEckf8moNYHdJ+4wkHvFxjyW6ulm9l4YGaOxeyBWPhBOT0gvni1InpFPdzx1dKf/2s62qGITwxNWnPQng==}
+
+  '@zumer/snapdom@2.0.2':
+    resolution: {integrity: sha512-W6quT4lMcPu8Q9O/Q6witSfc6/+xuY8C8yDoHug/+o7zYKCNE/e0I3//XsWDkyq9C0mDE0TAWF/8bwCR7x3gHQ==}
 
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
@@ -2072,6 +2078,8 @@ snapshots:
   '@types/svgo@2.6.4':
     dependencies:
       '@types/node': 25.2.0
+
+  '@zumer/snapdom@2.0.2': {}
 
   acorn@8.15.0: {}
 

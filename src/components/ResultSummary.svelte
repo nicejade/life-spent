@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onDestroy, tick } from 'svelte';
+  import { snapdom } from '@zumer/snapdom';
   import { formatAge, formatDate, getImpactData } from '../helper/lifeSpent';
   import { buildShareUrl, copyShareUrl, dateToBirthString } from '../helper/urlParams';
   import ImpactWeeksWall from './impact/ImpactWeeksWall.svelte';
@@ -17,9 +19,14 @@
   let impactView: ImpactView = 'grid';
 
   // Share functionality
+  let captureTarget: HTMLDivElement | null = null;
   let shareUrl = '';
   let copySuccess = false;
   let copyTimeout: ReturnType<typeof setTimeout> | null = null;
+  let copyImageBusy = false;
+  let copyImageSuccess = false;
+  let copyImageError = false;
+  let copyImageTimeout: ReturnType<typeof setTimeout> | null = null;
 
   $: percentDisplay = result.percentSpent.toFixed(2);
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
@@ -43,6 +50,17 @@
     result.yearsRemaining > 0
       ? formatString($t.resultSummary.expectancyGapBefore, { age: formatAge(result.yearsRemaining) })
       : $t.resultSummary.expectancyGapReached;
+  $: shareText = formatString($t.resultSummary.shareText, {
+    percent: percentDisplay,
+    age: formatAge(result.currentAge)
+  });
+  $: copyImageLabel = copyImageBusy
+    ? $t.resultSummary.copyImageBusy
+    : copyImageSuccess
+      ? $t.resultSummary.copyImageDone
+      : copyImageError
+        ? $t.resultSummary.copyImageFailed
+        : $t.resultSummary.copyImage;
 
   // Build share URL when result changes
   $: shareUrl = buildShareUrl({
@@ -104,6 +122,69 @@
     }
   }
 
+  function resetCopyImageState() {
+    copyImageSuccess = false;
+    copyImageError = false;
+    if (copyImageTimeout) clearTimeout(copyImageTimeout);
+    copyImageTimeout = null;
+  }
+
+  async function createShareImageBlob() {
+    if (!captureTarget) {
+      throw new Error('missing share target');
+    }
+    await tick();
+    if (document?.fonts?.ready) {
+      await document.fonts.ready;
+    }
+    const result = await snapdom(captureTarget, {
+      scale: 2,
+      embedFonts: true,
+      exclude: ['[data-share-control]'],
+      excludeMode: 'remove',
+    });
+    const blob = await result.toBlob({ type: 'png' });
+    if (!blob || blob.size === 0) {
+      throw new Error('empty share image');
+    }
+    return blob;
+  }
+
+  async function handleCopyImage() {
+    if (copyImageBusy) return;
+    copyImageBusy = true;
+    resetCopyImageState();
+
+    try {
+      const blob = await createShareImageBlob();
+      const item = new ClipboardItem({ 'image/png': blob });
+      await navigator.clipboard.write([item]);
+      copyImageSuccess = true;
+      copyImageTimeout = setTimeout(() => {
+        copyImageSuccess = false;
+      }, 2000);
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === 'AbortError')) {
+        copyImageError = true;
+        copyImageTimeout = setTimeout(() => {
+          copyImageError = false;
+        }, 2000);
+      }
+    } finally {
+      copyImageBusy = false;
+    }
+  }
+
+  function handleShareToTwitter() {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  function handleShareToFacebook() {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   function handleViewChange(view: ImpactView) {
     impactView = view;
     const eventMap: Record<ImpactView, string> = {
@@ -119,9 +200,17 @@
     trackEvent(GA_EVENTS.RESET_CALCULATE);
     onReset();
   }
+
+  onDestroy(() => {
+    if (copyTimeout) clearTimeout(copyTimeout);
+    if (copyImageTimeout) clearTimeout(copyImageTimeout);
+  });
 </script>
 
-<div class="glass-card rounded-2xl p-8 md:p-12 max-w-2xl w-full space-y-8">
+<div
+  class="glass-card rounded-2xl p-8 md:p-12 max-w-2xl w-full space-y-8"
+  bind:this={captureTarget}
+>
   <!-- 相对年龄位置 - 顶部突出显示 -->
   <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 via-ink-900/80 to-ink-950 border border-white/10 p-6 text-center light:from-black/5 light:via-paper-100/80 light:to-paper-50 light:border-black/10">
     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent light:via-black/5" />
@@ -286,23 +375,56 @@
     <p class="text-paper-100/90 font-black light:text-ink-950">{$t.resultSummary.reflectionConclusion}</p>
   </div>
 
-  <div class="flex gap-3">
-    <button
-      on:click={handleShare}
-      class="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
-             text-neutral-200 rounded-xl transition-all cursor-pointer
-             light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700"
-      aria-label={$t.resultSummary.shareLink}
-    >
-      {#if copySuccess}
-        <span class="text-ink-950 light:text-paper-50">{$t.resultSummary.copied}</span>
-      {:else}
-        <span>{$t.resultSummary.shareLink}</span>
-      {/if}
-    </button>
+  <div class="space-y-3" data-share-control>
+    <div class="grid gap-3 md:grid-cols-2">
+      <button
+        on:click={handleShare}
+        class="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
+               text-neutral-200 rounded-xl transition-all cursor-pointer
+               light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700"
+        aria-label={$t.resultSummary.shareLink}
+      >
+        {#if copySuccess}
+          <span class="text-ink-950 light:text-paper-50">{$t.resultSummary.copied}</span>
+        {:else}
+          <span>{$t.resultSummary.shareLink}</span>
+        {/if}
+      </button>
+      <button
+        on:click={handleCopyImage}
+        class="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
+               text-neutral-200 rounded-xl transition-all cursor-pointer
+               light:bg-black/5 light:hover:bg-black/10 light:border-black/10 light:hover:border-black/20 light:text-neutral-700
+               disabled:cursor-not-allowed disabled:opacity-60"
+        aria-label={$t.resultSummary.copyImage}
+        disabled={copyImageBusy}
+      >
+        <span class={copyImageSuccess ? 'text-amber-200' : copyImageError ? 'text-red-200' : ''}>
+          {copyImageLabel}
+        </span>
+      </button>
+      <button
+        on:click={handleShareToTwitter}
+        class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-200/40
+               text-amber-100 rounded-xl transition-all cursor-pointer
+               light:bg-amber-500/15 light:hover:bg-amber-500/25 light:border-amber-500/30 light:text-amber-700"
+        aria-label={$t.resultSummary.shareToTwitter}
+      >
+        {$t.resultSummary.shareToTwitter}
+      </button>
+      <button
+        on:click={handleShareToFacebook}
+        class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-200/40
+               text-amber-100 rounded-xl transition-all cursor-pointer
+               light:bg-amber-500/15 light:hover:bg-amber-500/25 light:border-amber-500/30 light:text-amber-700"
+        aria-label={$t.resultSummary.shareToFacebook}
+      >
+        {$t.resultSummary.shareToFacebook}
+      </button>
+    </div>
     <button
       on:click={handleResetClick}
-      class="flex-1 px-6 py-3 bg-paper-50/95 hover:bg-paper-100 border border-paper-100/70
+      class="w-full px-6 py-3 bg-paper-50/95 hover:bg-paper-100 border border-paper-100/70
              hover:border-paper-200 text-ink-950 rounded-xl transition-all cursor-pointer
              light:bg-ink-950 light:text-paper-50 light:border-ink-900 light:hover:bg-ink-900
              active:scale-[0.98] flex items-center justify-center gap-2"

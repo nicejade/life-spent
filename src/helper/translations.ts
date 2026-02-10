@@ -96,6 +96,14 @@ export interface Translations {
     reflectionConclusion: string;
     shareLink: string;
     copied: string;
+    copyImage: string;
+    copyImageBusy: string;
+    copyImageDone: string;
+    copyImageFailed: string;
+    shareToTwitter: string;
+    shareToFacebook: string;
+    shareText: string;
+    shareTitle: string;
     reset: string;
   };
   
