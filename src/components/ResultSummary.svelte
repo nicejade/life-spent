@@ -152,6 +152,7 @@
 
   async function handleCopyImage() {
     if (copyImageBusy) return;
+    trackEvent(GA_EVENTS.COPY_IMAGE_CLICK);
     copyImageBusy = true;
     resetCopyImageState();
 
@@ -160,12 +161,14 @@
       const item = new ClipboardItem({ 'image/png': blob });
       await navigator.clipboard.write([item]);
       copyImageSuccess = true;
+      trackEvent(GA_EVENTS.COPY_IMAGE_SUCCESS);
       copyImageTimeout = setTimeout(() => {
         copyImageSuccess = false;
       }, 2000);
     } catch (error) {
       if (!(error instanceof DOMException && error.name === 'AbortError')) {
         copyImageError = true;
+        trackEvent(GA_EVENTS.COPY_IMAGE_FAILED);
         copyImageTimeout = setTimeout(() => {
           copyImageError = false;
         }, 2000);
@@ -176,11 +179,13 @@
   }
 
   function handleShareToTwitter() {
+    trackEvent(GA_EVENTS.SHARE_TWITTER);
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   function handleShareToFacebook() {
+    trackEvent(GA_EVENTS.SHARE_FACEBOOK);
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   }

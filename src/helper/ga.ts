@@ -47,6 +47,11 @@ export const GA_EVENTS = {
   VIEW_HEARTBEAT: 'view-heartbeat',
   SHARE_CLICK: 'share-click',
   SHARE_COPY: 'share-copy',
+  COPY_IMAGE_CLICK: 'copy-image-click',
+  COPY_IMAGE_SUCCESS: 'copy-image-success',
+  COPY_IMAGE_FAILED: 'copy-image-failed',
+  SHARE_TWITTER: 'share-twitter',
+  SHARE_FACEBOOK: 'share-facebook',
   RESET_CALCULATE: 'reset-calculate',
   PAGE_VIEW: 'page-view',
 } as const;
