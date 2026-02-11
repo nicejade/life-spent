@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { calculateLifePercent, validateBirthDate } from './helper/lifeSpent';
-  import { parseShareParams, birthStringToDate } from './helper/urlParams';
+  import { parseShareParams, birthStringToDate, buildShareUrl, dateToBirthString } from './helper/urlParams';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import Header from './components/Header.svelte';
@@ -13,6 +13,16 @@
   import { get } from 'svelte/store';
 
   let result: LifeCalculation | null = null;
+
+  // Record whether localStorage had settings before initial render (avoids showing ResultSummary from defaults InputPanel writes)
+  let hadStoredSettingsOnLoad = false;
+  if (typeof window !== 'undefined') {
+    try {
+      hadStoredSettingsOnLoad = !!localStorage.getItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  }
 
   interface StoredSettings {
     selectedYear: string;
@@ -170,8 +180,8 @@
         populationMedianAge: shareParams.populationMedianAge,
         isLifeExpectancyCustom: true
       });
-    } else {
-      // 如果没有 URL 参数，检查 localStorage 中是否有保存的数据
+    } else if (hadStoredSettingsOnLoad) {
+      // 仅当页面加载前 localStorage 已有设置时才恢复结果
       loadAndCalculateFromStorage();
     }
   });
@@ -183,6 +193,15 @@
     populationMedianAge: number,
     isLifeExpectancyCustom: boolean
   ) {
+    // Update URL so ResultSummary display condition is satisfied (localStorage OR URL params)
+    const shareUrl = buildShareUrl({
+      birth: dateToBirthString(birthDate),
+      gender,
+      lifeExpectancy,
+      populationMedianAge
+    });
+    window.history.replaceState({}, '', shareUrl);
+
     result = calculateLifePercent({ 
       birthDate, 
       gender, 
@@ -199,6 +218,9 @@
     url.search = '';
     window.history.replaceState({}, '', url.toString());
   }
+
+  // ResultSummary only when: localStorage had settings before load, OR URL has complete params
+  $: showResultSummary = result !== null && (hadStoredSettingsOnLoad || parseShareParams() !== null);
 </script>
 
 <main class="min-h-screen relative overflow-hidden bg-ink-950 text-paper-50 light:bg-paper-50 light:text-ink-950 transition-colors duration-300 motion-reduce:transition-none">
@@ -225,10 +247,10 @@
 
     <section class="flex flex-col gap-8 xl:flex-row xl:items-start">
       <div class="flex-1">
-        {#if result === null}
-          <InputPanel onCalculate={handleCalculate} />
-        {:else}
+        {#if showResultSummary && result}
           <ResultSummary result={result} onReset={handleReset} />
+        {:else}
+          <InputPanel onCalculate={handleCalculate} />
         {/if}
       </div>
 
