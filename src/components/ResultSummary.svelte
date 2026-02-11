@@ -409,15 +409,6 @@
         </span>
       </button>
       <button
-        on:click={handleShareToTwitter}
-        class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-200/40
-               text-amber-100 rounded-xl transition-all cursor-pointer
-               light:bg-amber-500/15 light:hover:bg-amber-500/25 light:border-amber-500/30 light:text-amber-700"
-        aria-label={$t.resultSummary.shareToTwitter}
-      >
-        {$t.resultSummary.shareToTwitter}
-      </button>
-      <button
         on:click={handleShareToFacebook}
         class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-200/40
                text-amber-100 rounded-xl transition-all cursor-pointer
@@ -425,6 +416,15 @@
         aria-label={$t.resultSummary.shareToFacebook}
       >
         {$t.resultSummary.shareToFacebook}
+      </button>
+      <button
+        on:click={handleShareToTwitter}
+        class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-200/40
+               text-amber-100 rounded-xl transition-all cursor-pointer
+               light:bg-amber-500/15 light:hover:bg-amber-500/25 light:border-amber-500/30 light:text-amber-700"
+        aria-label={$t.resultSummary.shareToTwitter}
+      >
+        {$t.resultSummary.shareToTwitter}
       </button>
     </div>
     <button
