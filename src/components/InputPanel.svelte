@@ -47,7 +47,6 @@
     }
   }
 
-
   function sanitizeNumericInput(value: string) {
     let cleaned = value.replace(/[^0-9.]/g, '');
     
@@ -192,15 +191,6 @@
     lifeExpectancyInput = String(LIFE_EXPECTANCY_DEFAULT_FEMALE);
   }
 
-  $: saveSettings({
-    selectedYear,
-    selectedMonth,
-    selectedDay,
-    gender,
-    lifeExpectancyInput,
-    populationMedianAgeInput
-  });
-
   function handleYearSelect(e: CustomEvent<SelectItem>) {
     selectedYear = e.detail?.value ?? selectedYear;
     trackEvent(GA_EVENTS.SELECT_YEAR, {
@@ -280,6 +270,15 @@
       gender: gender,
       life_expectancy: lifeExpectancy,
       population_median_age: populationMedianAge,
+    });
+
+    saveSettings({
+      selectedYear,
+      selectedMonth,
+      selectedDay,
+      gender,
+      lifeExpectancyInput,
+      populationMedianAgeInput
     });
 
     onCalculate(birthDate, gender, lifeExpectancy, populationMedianAge, isLifeExpectancyCustom);

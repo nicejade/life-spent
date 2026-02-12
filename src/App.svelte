@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { calculateLifePercent, validateBirthDate } from './helper/lifeSpent';
-  import { parseShareParams, birthStringToDate, buildShareUrl, dateToBirthString } from './helper/urlParams';
+  import { parseShareParams, birthStringToDate } from './helper/urlParams';
   import InputPanel from './components/InputPanel.svelte';
   import ResultSummary from './components/ResultSummary.svelte';
   import Header from './components/Header.svelte';
@@ -13,6 +13,7 @@
   import { get } from 'svelte/store';
 
   let result: LifeCalculation | null = null;
+  let hasCalculatedThisSession = false;
 
   // Record whether localStorage had settings before initial render (avoids showing ResultSummary from defaults InputPanel writes)
   let hadStoredSettingsOnLoad = false;
@@ -193,14 +194,7 @@
     populationMedianAge: number,
     isLifeExpectancyCustom: boolean
   ) {
-    // Update URL so ResultSummary display condition is satisfied (localStorage OR URL params)
-    const shareUrl = buildShareUrl({
-      birth: dateToBirthString(birthDate),
-      gender,
-      lifeExpectancy,
-      populationMedianAge
-    });
-    window.history.replaceState({}, '', shareUrl);
+    hasCalculatedThisSession = true;
 
     result = calculateLifePercent({ 
       birthDate, 
@@ -219,8 +213,9 @@
     window.history.replaceState({}, '', url.toString());
   }
 
-  // ResultSummary only when: localStorage had settings before load, OR URL has complete params
-  $: showResultSummary = result !== null && (hadStoredSettingsOnLoad || parseShareParams() !== null);
+  // ResultSummary when: calculated this session, OR localStorage had settings before load, OR URL has complete params
+  $: showResultSummary =
+    result !== null && (hasCalculatedThisSession || hadStoredSettingsOnLoad || parseShareParams() !== null);
 </script>
 
 <main class="min-h-screen relative overflow-hidden bg-ink-950 text-paper-50 light:bg-paper-50 light:text-ink-950 transition-colors duration-300 motion-reduce:transition-none">
