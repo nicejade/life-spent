@@ -16,6 +16,11 @@
   export let onReset: () => void;
 
   type ImpactView = 'strata' | 'weeks' | 'heartbeat' | 'grid';
+  type ReflectionConclusionKey = 'muchYounger' | 'slightlyYounger' | 'aboutSame' | 'slightlyOlder' | 'muchOlder';
+
+  const MUCH_GAP_YEARS = 10;
+  const SMALL_GAP_YEARS = 3;
+
   let impactView: ImpactView = 'grid';
 
   // Share functionality
@@ -28,6 +33,14 @@
   let copyImageError = false;
   let copyImageTimeout: ReturnType<typeof setTimeout> | null = null;
 
+  function getReflectionConclusionKey(deltaYears: number): ReflectionConclusionKey {
+    if (deltaYears <= -MUCH_GAP_YEARS) return 'muchYounger';
+    if (deltaYears < -SMALL_GAP_YEARS) return 'slightlyYounger';
+    if (deltaYears <= SMALL_GAP_YEARS) return 'aboutSame';
+    if (deltaYears < MUCH_GAP_YEARS) return 'slightlyOlder';
+    return 'muchOlder';
+  }
+
   $: percentDisplay = result.percentSpent.toFixed(2);
   $: filledPercent = Math.min(Math.max(result.percentSpent, 0), 100);
   $: remainingPercent = Math.max(100 - result.percentSpent, 0).toFixed(2);
@@ -36,6 +49,10 @@
   $: relativeDeltaYearsDisplay = `${relativeDeltaYears >= 0 ? '+' : '-'}${Math.abs(relativeDeltaYears).toFixed(1)}`;
   $: relativeDeltaPercent = result.relativeAgeDeltaPercent;
   $: relativeDeltaPercentDisplay = `${relativeDeltaPercent >= 0 ? '+' : '-'}${Math.abs(relativeDeltaPercent).toFixed(1)}`;
+  $: reflectionConclusionKey = getReflectionConclusionKey(relativeDeltaYears);
+  $: reflectionConclusion = $t.resultSummary.reflectionConclusions
+    ? $t.resultSummary.reflectionConclusions[reflectionConclusionKey]
+    : $t.resultSummary.reflectionConclusion;
   $: filledPercentColor = getFilledPercentColor(filledPercent);
   $: relativeDeltaBaseColor = $theme === 'light' ? 'rgb(11 11 11)' : 'rgb(255 255 255)';
   $: relativeDeltaColor = relativeDeltaPercent < 0
@@ -377,7 +394,7 @@
 
   <div class="bg-paper-100/10 border border-paper-200/20 rounded-xl p-4 text-sm text-neutral-300 leading-relaxed space-y-2 light:bg-black/5 light:border-black/10 light:text-neutral-700">
     <p>{$t.resultSummary.reflectionContent}</p>
-    <p class="text-paper-100/90 font-black light:text-ink-950">{$t.resultSummary.reflectionConclusion}</p>
+    <p class="text-paper-100/90 font-black light:text-ink-950">{reflectionConclusion}</p>
   </div>
 
   <div class="space-y-3" data-share-control>

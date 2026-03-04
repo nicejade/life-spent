@@ -94,6 +94,13 @@ export interface Translations {
     reflectionTitle: string;
     reflectionContent: string;
     reflectionConclusion: string;
+    reflectionConclusions?: {
+      muchYounger: string;
+      slightlyYounger: string;
+      aboutSame: string;
+      slightlyOlder: string;
+      muchOlder: string;
+    };
     shareLink: string;
     copied: string;
     copyImage: string;

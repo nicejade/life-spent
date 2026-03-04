@@ -83,6 +83,18 @@ export const fr: Translations = {
     reflectionTitle: '',
     reflectionContent: 'L\'espérance de vie moyenne n\'est pas le point final, mais une référence. Affrontez le temps restant et rendez chaque jour plus conscient.',
     reflectionConclusion: 'Si vous approchez de l\'âge médian de la population, ce seuil de "encore jeune" est déjà derrière vous.',
+    reflectionConclusions: {
+      muchYounger:
+        "Vous êtes bien plus jeune que l'âge médian de la population : c'est un moment précieux pour poser des bases solides. Vivez aujourd'hui avec sérieux mais aussi avec douceur, et votre futur vous dira merci.",
+      slightlyYounger:
+        "Vous êtes un peu plus jeune que l'âge médian, avec encore un bel espace devant vous. Continuez à vivre avec intention, en agissant avec légèreté, pour que chaque journée gagne silencieusement en valeur.",
+      aboutSame:
+        "Votre âge est proche de l'âge médian de la population ; c'est un bon moment pour ajuster le cap. Laissez vos journées mêler sens et petits sourires : aujourd'hui compte déjà énormément.",
+      slightlyOlder:
+        "Vous êtes légèrement plus âgé que l'âge médian, et la valeur du temps devient sans doute plus nette. Offrez vos journées à ce que vous aimez et aux personnes qui comptent ; vivez avec sérieux, sans oublier votre propre joie.",
+      muchOlder:
+        "Vous êtes bien plus âgé que l'âge médian de la population : ce n'est pas un poids, mais une forme de lucidité en cadeau. Vivre chaque jour avec sincérité et une joie paisible est déjà une réponse profondément forte.",
+    },
     shareLink: 'Partager le Lien',
     copied: 'Copié',
     copyImage: 'Copier l\'image',

@@ -83,6 +83,13 @@ export const zh: Translations = {
     reflectionTitle: '',
     reflectionContent: '平均预期寿命不是终点，而是参考值。正视剩余时间，让每天都更清醒。',
     reflectionConclusion: '若你已接近人群中位年龄，那道「还年轻」的门槛早已在身后。',
+    reflectionConclusions: {
+      muchYounger: '你比人群中位年龄小很多，这是很好的积累期。把今天过得认真又快乐，未来会感谢现在的你。',
+      slightlyYounger: '你比人群中位年龄小一些，前方仍有充足空间。继续用心生活、快乐行动，让每一天都在增值。',
+      aboutSame: '你与人群中位年龄差不多，这正是校准方向的好时刻。把日子过得有心也有笑容，今天就很重要。',
+      slightlyOlder: '你比人群中位年龄大一些，但时间的价值会更清晰。把每天留给热爱与陪伴，认真生活，也别忘了快乐。',
+      muchOlder: '你比人群中位年龄大很多，这不是负担，而是清醒的礼物。把每一天都活得真诚而快乐，就是最有力的回应。',
+    },
     shareLink: '分享链接',
     copied: '已复制',
     copyImage: '复制图片',

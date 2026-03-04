@@ -83,6 +83,18 @@ export const en: Translations = {
     reflectionTitle: '',
     reflectionContent: 'Average life expectancy is not the endpoint, but a reference. Face the remaining time and make each day more conscious.',
     reflectionConclusion: 'If you are approaching the population median age, that threshold of "still young" is already behind you.',
+    reflectionConclusions: {
+      muchYounger:
+        'You are much younger than the population median age — this is a precious phase for building your foundations. Live today with care and a bit of joy; your future self will be grateful.',
+      slightlyYounger:
+        'You are a bit younger than the population median age, and there is still generous room ahead. Keep living intentionally and acting with lightness, so each day quietly gains value.',
+      aboutSame:
+        'You are close to the population median age; it is a fitting moment to recalibrate. Let your days hold both intention and small joys — today already matters a great deal.',
+      slightlyOlder:
+        'You are slightly older than the population median age, which makes the weight of time feel clearer. Give your days to what you love and to those beside you; live earnestly, and do not forget to be kind to your own happiness.',
+      muchOlder:
+        'You are much older than the population median age — not a burden, but a lucid kind of gift. Living each day with honesty and quiet joy is already a powerful answer.',
+    },
     shareLink: 'Share Link',
     copied: 'Copied',
     copyImage: 'Copy Image',
